@@ -34,11 +34,14 @@ class DirView(basisView.BasisView):
     def connectFunc(self):
         self.forwardBtn.clicked.connect(partial(self.moveCurrentDir, 0))
         self.backwardBtn.clicked.connect(partial(self.moveCurrentDir, 1))
-        self.dirTreeWid.currentItemChanged.connect(self.refreshCurrentDir)
+        self.dirTreeWid.currentItemChanged.connect(self.renewCurrentDir)
 
     def initContent(self):
+        self.refreshCurrentDirView()
+
+    def refreshCurrentDirView(self):
         projRoot = self.dataCtrl.getDataVal('projectRoot')
-        curPath = self.dataCtrl.gentDataVal('currentDir')
+        curPath = self.dataCtrl.getDataVal('currentDir')
         projRoot = '/Users/wujiajian'
         curPath = '/Users/wujiajian/Documents/sofeware/a'
         if not projRoot.endswith('/'):
@@ -50,10 +53,67 @@ class DirView(basisView.BasisView):
             curPath = projRoot
 
         srcPath = projRoot
-        widName = 'Root'
-        srcTwItem = QtGui.QTreeWidgetItem(self.dirTreeWid)
-        srcTwItem.setText(0, widName)
-        srcTwItem.curPath = projRoot
+        pathInfo = {'Root': srcPath}
+        rootItem = self.dirTreeWid
+        oldRootItem = None
+        outCurPath = srcPath
+        while srcPath:
+            keys = pathInfo.keys()
+            keys.sort()
+            itemList = rootItem.findItems()
+
+            srcPath = ''
+            for key in keys:
+                full = pathInfo[key]
+                if os.path.isdir(full) and \
+                   not key == 'innerVersion' and \
+                   not key.startswith('.'):
+                    if not full.endswith('/'):
+                        full += '/'
+
+                    twItem = None
+                    for item in itemList:
+                        if item.curPath == full:
+                            twItem = item
+                            break
+
+                    if twItem:
+                        twItem = QtGui.QTreeWidgetItem(rootItem)
+                        twItem.setText(key)
+                        twItem.curPath = full
+
+                    if curPath.startswith(full):
+                        srcPath = full
+                        if oldRootItem:
+                            oldRootItem.setExpanded(1)
+
+            if srcPath:
+                outCurPath = srcPath
+                pathInfo = {}
+                tem = os.listdir(srcPath)
+                for t in tem:
+                    rFull = os.path.join(srcPath, t).replace('\\', '/')
+                    pathInfo[t] = rFull
+
+        if outCurPath:
+            oldRootItem.setSelected(1)
+
+        updateInfo = {'currentDir': outCurPath}
+        self.dataCtrl.setData(updateInfo)
+        self.emitUpdateSignal()
+
+        '''
+        srcTwItem = None
+        itemList = self.dirTreeWid.findItems(widName)
+        for item in itemList:
+            if item.curPath == srcPath:
+                srcTwItem = item
+                break
+        if not srcTwItem:
+            srcTwItem = QtGui.QTreeWidgetItem(self.dirTreeWid)
+            srcTwItem.setText(0, widName)
+            srcTwItem.curPath = projRoot
+            
         outCurPath = ''
         while srcPath:
             tem = os.listdir(srcPath)
@@ -62,9 +122,7 @@ class DirView(basisView.BasisView):
             outPath = ''
             for t in tem:
                 full = os.path.join(srcPath, t).replace('\\', '/')
-                if os.path.isdir(full) and \
-                   not t == 'innerVersion' and \
-                   not t.startswith('.'):
+
                     expand = 1
                     if not full.endswith('/'):
                         full += '/'
@@ -88,28 +146,9 @@ class DirView(basisView.BasisView):
 
         updateInfo = {'currentDir': outCurPath}
         self.dataCtrl.setData(updateInfo)
+        '''
 
-        self.emitUpdateSignal()
-
-    def emitUpdateSignal(self):
-        self.updateContViewSignal.emit()
-
-    def moveCurrentDir(self, movType):
-        currentDir = self.dataCtrl.getDataVal('currentDir')
-        currentDirs = self.dataCtrl.getDataVal('currentDirs', [currentDir])
-        currentDirId = self.dataCtrl.getDataVal('currentDirId', 0)
-
-        if movType == 0:
-            currentDirId = max(0, currentDirId - 1)
-        else:
-            currentDirId = min(max(0, len(currentDirs) - 1), currentDirId + 1)
-
-        currentDir = currentDirs[currentDirId]
-        updateInfo = {'currentDir': currentDir,
-                      'currentDirId': currentDirId}
-        self.dataCtrl.setData(updateInfo)
-
-    def refreshCurrentDir(self, *curTwItem):
+    def renewCurrentDir(self, *curTwItem):
         if not curTwItem:
             return
         
@@ -122,34 +161,34 @@ class DirView(basisView.BasisView):
             currentDirs.append(currentDir)
         else:
             if len(currentDirs) >= 10:
-                currentDirs.pop()
+                currentDirs.pop(0)
                 
             currentDirs.append(currentDir)
 
+        currentDirId = len(currentDirs) - 1
+
         updateInfo = {'currentDir': currentDir,
+                      'currentDirId': currentDirId,
                       'currentDirs': currentDirs}
         self.dataCtrl.setData(updateInfo)
+        self.refreshCurrentDirView()
 
-        self.refreshCurrentDirView(curTwItem)
+    def emitUpdateSignal(self):
+        self.updateContViewSignal.emit()
 
-    def refreshCurrentDir(self, curTwItem):
-        currentDir = self.dataCtrl.getDataVal('currentDir')
-        if not os.path.isdir(currentDir):
-            currentDirs = self.dataCtrl.getDataVal('currentDirs')
-            currentDirs.pop()
-            currentDir = currentDirs[-1]
+    def moveCurrentDir(self, movType):
+        currentDirId = self.dataCtrl.getDataVal('currentDirId')
+        newDirId = currentDirId + pow(-1, (currentDirId + 1))
 
-            updateInfo = {'currentDir': currentDir,
-                          'currentDirs': currentDirs}
-            self.dataCtrl.setData(updateInfo)
-            self.refreshCurrentDir()
-            
+        currentDirs = self.dataCtrl.getDataVal('currentDirs')
+        newDirId = max(min(0, newDirId), len(currentDirs) - 1)
+        currentDir = currentDirs[newDirId]
+        updateInfo = {'currentDir': currentDir,
+                      'currentDirId': newDirId}
+        self.dataCtrl.setData(updateInfo)
+        self.refreshCurrentDirView()
 
         
-        
-        
-        
-
 if __name__ == '__main__':
     import sys
 
