@@ -24,32 +24,50 @@ class MainView(basisView.BasisView):
         self.connectSignal()
 
     def buildElements(self):
-        projRoot = self.dataCtrl.getDataVal('projectRoot')
-        curPath = self.dataCtrl.getDataVal('currentDir')
-        print projRoot
-        print curPath
+        super(MainView, self).buildElements()
+        
         self.rootWid = rootView.RootView()
+
+        self.splitter = QtGui.QSplitter(QtCore.Qt.Horizontal)
+
+        self.leftWid = QtGui.QWidget()
         self.dirWid = dirView.DirView()
         self.funcWid = funcView.FuncView()
-        self.typeView = typeView.TypeView()
-        self.contentView = contentView.ContentView()
-        self.cmpView = cmpView.CmpView()
-
+        self.typeWid = typeView.TypeView()
+        
+        self.contentWid = contentView.ContentView()
+        self.cmpWid = cmpView.CmpView()
+        
         self.rootWid.do(self.dataCtrl)
         self.dirWid.do(self.dataCtrl)
         self.funcWid.do(self.dataCtrl)
-        self.typeView.do(self.dataCtrl)
-        self.contentView.do(self.dataCtrl)
-        self.cmpView.do(self.dataCtrl)
+        self.typeWid.do(self.dataCtrl)
+        self.contentWid.do(self.dataCtrl)
+        self.cmpWid.do(self.dataCtrl)
+
+    def buildLayout(self):
+        super(MainView, self).buildLayout()
+        self.leftLO = QtGui.QVBoxLayout()
 
     def buildWidget(self):
-        self.mainLO.addWidget(self.rootWid, 0, 0, 1, 4)
+        super(MainView, self).buildWidget()
         
-        self.mainLO.addWidget(self.dirWid, 10, 0)
-        self.mainLO.addWidget(self.funcWid, 11, 0)
-        self.mainLO.addWidget(self.typeWid, 12, 0)
-        self.mainLO.addWidget(self.contentView, 10, 1, 1, 3)
-        self.mainLO.addWidget(self.cmpView, 10, 3, 2, 3)
+        self.mainLO.addWidget(self.rootWid, 0, 0)
+        self.mainLO.addWidget(self.splitter, 1, 0)
+
+        self.leftWid.setLayout(self.leftLO)
+        self.leftLO.setSpacing(3)
+        self.leftLO.setContentsMargins(4, 2, 4, 4)
+        self.leftLO.addWidget(self.dirWid)
+        self.leftLO.addWidget(self.funcWid)
+        self.leftLO.addWidget(self.typeWid)
+
+        self.splitter.addWidget(self.leftWid)
+        self.splitter.addWidget(self.contentWid)
+        self.splitter.addWidget(self.cmpWid)
+
+        self.mainLO.setColumnStretch(0, 0)
+        self.mainLO.setColumnStretch(1, 1)
 
     def connectFunc(self):
         return

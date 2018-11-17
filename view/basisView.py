@@ -27,15 +27,22 @@ class BasisView(QtGui.QDialog):
         self.dataCtrl = dataCtrl
 
     def buildElements(self):
+        self.mainFrame = QtGui.QFrame()
         self.titleLabel = QtGui.QLabel()
         self.centerAlign = QtCore.Qt.Alignment(4)
-        return
 
     def buildLayout(self):
         self.mainLO = QtGui.QGridLayout()
+        self.frameLO = QtGui.QGridLayout()
 
     def buildWidget(self):
-        return
+        self.setLayout(self.mainLO)
+        self.mainFrame.setFrameShape(QtGui.QFrame.Box)
+        self.mainFrame.setLayout(self.frameLO)
+        self.mainLO.setSpacing(3)
+        self.mainLO.setContentsMargins(4, 2, 4, 4)
+        self.frameLO.setSpacing(3)
+        self.frameLO.setContentsMargins(3, 2, 3, 4)
 
     def connectFunc(self):
         return

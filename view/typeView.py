@@ -42,11 +42,16 @@ class TypeView(basisView.BasisView):
         self.chkOffBtn = QtGui.QPushButton('Check Off All')
 
     def buildWidget(self):
-        self.mainLO.addWidget(self.titleLabel, 0, 0, 1, 2, self.centerAlign)
-        self.mainLO.addWidget(self.typeLW, 1, 0, 1, 2)
-        self.mainLO.addWidget(self.chkOnBtn, 2, 0)
-        self.mainLO.addWidget(self.chkOffBtn, 2, 1)
-        self.setLayout(self.mainLO)
+        super(TypeView, self).buildWidget()
+
+        self.mainLO.addWidget(self.mainFrame)
+        
+        self.frameLO.addWidget(self.titleLabel, 0, 0, 1, 2, self.centerAlign)
+        self.frameLO.addWidget(self.typeLW, 1, 0, 1, 2)
+        self.frameLO.addWidget(self.chkOnBtn, 2, 0)
+        self.frameLO.addWidget(self.chkOffBtn, 2, 1)
+
+        # self.setFixedWidth(250)
 
     def connectFunc(self):
         #self.funcCB.activated.connect(self.itemInnerFunc)

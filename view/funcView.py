@@ -6,8 +6,8 @@ except:
     from PySide import QtCore
 
 import basisView
-from functools import partial
 import buttonView
+from functools import partial
 
 class dc(object):
     def __init__(self):
@@ -43,7 +43,7 @@ class FuncView(basisView.BasisView):
 
         self.fnLabel = QtGui.QLabel('File Name:')
         self.fnLE = QtGui.QLineEdit()
-        self.autoFnBtn = QtGui.QPushButton('Config Name')
+        self.autoFnBtn = QtGui.QPushButton('Config File Name')
 
         self.mailLabel = QtGui.QLabel('Mail List:')
         self.mailTE = QtGui.QTextEdit()
@@ -51,25 +51,27 @@ class FuncView(basisView.BasisView):
         self.chkOutBtn = QtGui.QPushButton('Check Out')
 
     def buildWidget(self):
-        self.mainLO.addWidget(self.titleLabel, 0, 0, 1, 3, self.centerAlign)
+        super(FuncView, self).buildWidget()
+        self.mainLO.addWidget(self.mainFrame)
         
-        self.mainLO.addWidget(self.ftLabel, 10, 0)
-        self.mainLO.addWidget(self.ftCB, 10, 1, 1, 2)
+        self.frameLO.addWidget(self.titleLabel, 0, 0, 1, 2, self.centerAlign)
+        
+        self.frameLO.addWidget(self.ftLabel, 1, 0)
+        self.frameLO.addWidget(self.ftCB, 1, 1, 1)
 
-        self.mainLO.addWidget(self.fnLabel, 20, 0)
-        self.mainLO.addWidget(self.fnLE, 20, 1)
-        self.mainLO.addWidget(self.autoFnBtn, 20, 2)
+        self.frameLO.addWidget(self.fnLabel, 2, 0)
+        self.frameLO.addWidget(self.fnLE, 2, 1)
 
-        self.mainLO.addWidget(self.mailLabel, 30, 0, 1, 2, self.centerAlign)
-        self.mainLO.addWidget(self.mailTE, 31, 0, 3, 2)
-        self.mainLO.addWidget(self.chkInBtn, 31, 2)
-        self.mainLO.addWidget(self.chkOutBtn, 32, 2)
+        self.frameLO.addWidget(self.mailLabel, 3, 0, self.centerAlign)
+        self.frameLO.addWidget(self.autoFnBtn, 3, 1)
 
-        self.mainLO.setRowStretch(33, 1)
+        self.frameLO.addWidget(self.mailTE, 4, 0, 3, 1)
+        self.frameLO.addWidget(self.chkInBtn, 4, 1)
+        self.frameLO.addWidget(self.chkOutBtn, 5, 1)
 
+        self.frameLO.setRowStretch(4, 1)
         self.titleLabel.setText('Function')
-
-        self.setLayout(self.mainLO)
+        # self.setFixedWidth(250)
 
     def connectFunc(self):
         return

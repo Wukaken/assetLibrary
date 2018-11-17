@@ -16,16 +16,24 @@ class RootView(basisView.BasisView):
         super(RootView, self).__init__(parent)
 
     def buildElements(self):
+        super(RootView, self).buildElements()
+        
         self.label = QtGui.QLabel('Project Root:')
         self.projPathLE = QtGui.QLineEdit()
         self.specBtn = QtGui.QPushButton('Browse')
 
     def buildWidget(self):
-        self.mainLO.addWidget(self.label, 0, 0)
-        self.mainLO.addWidget(self.projPathLE, 0, 1, 1, 2)
-        self.mainLO.addWidget(self.specBtn, 0, 3)
-
-        self.setLayout(self.mainLO)
+        super(RootView, self).buildWidget()
+        
+        self.mainLO.setRowStretch(0, 0)
+        self.mainLO.addWidget(self.mainFrame)
+        
+        self.frameLO.addWidget(self.label, 0, 0)
+        self.frameLO.addWidget(self.projPathLE, 0, 1)
+        self.frameLO.addWidget(self.specBtn, 0, 2)
+        self.frameLO.setColumnStretch(0, 0)
+        self.frameLO.setColumnStretch(1, 1)
+        self.frameLO.setColumnStretch(2, 0)
 
     def connectFunc(self):
         self.specBtn.clicked.connect(self.specProjPath)

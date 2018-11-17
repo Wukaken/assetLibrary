@@ -53,3 +53,4 @@ if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
     m = Main('', {})
     m.do()
+    app.exec_()

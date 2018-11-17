@@ -30,17 +30,29 @@ class DirView(basisView.BasisView):
         super(DirView, self).__init__(parent)
 
     def buildElements(self):
+        super(DirView, self).buildElements()
+        
         self.backwardBtn = QtGui.QPushButton('<-')
         self.forwardBtn = QtGui.QPushButton('->')
         self.dirTreeWid = QtGui.QTreeWidget(parent=self)
         self.selModel = self.dirTreeWid.selectionModel()
 
     def buildWidget(self):
-        self.mainLO.addWidget(self.backwardBtn, 0, 0)
-        self.mainLO.addWidget(self.forwardBtn, 0, 1)
-        self.mainLO.addWidget(self.dirTreeWid, 10, 0, 10, 2)
+        super(DirView, self).buildWidget()
 
-        self.setLayout(self.mainLO)
+        self.mainLO.addWidget(self.mainFrame)
+        
+        self.frameLO.addWidget(self.backwardBtn, 0, 0)
+        self.frameLO.addWidget(self.forwardBtn, 0, 1)
+        self.frameLO.addWidget(self.dirTreeWid, 1, 0, 10, 2)
+
+        self.dirTreeWid.setHeaderHidden(1)
+        self.dirTreeWid.setMinimumHeight(200)
+
+        self.frameLO.setRowStretch(0, 0)
+        self.frameLO.setRowStretch(1, 0)
+        
+        # self.setFixedWidth(250)
 
     def connectFunc(self):
         self.backwardBtn.clicked.connect(partial(self.moveCurrentDir, 1))

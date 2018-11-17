@@ -25,6 +25,7 @@ class BasisModel(object):
                     'currentDirId': 0,
 
                     'fileTypes': ['Maya Look File', 'Maya Rig File'],
+                    'tipKeys': ['fileName', 'fileType', 'version', 'descStr'],
                     'outInfoKeys': ['fileName', 'descStr']}
         self.completeData(initData)
 

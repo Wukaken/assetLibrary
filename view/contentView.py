@@ -36,26 +36,33 @@ class ContentView(basisView.BasisView):
         super(ContentView, self).__init__(parent)
 
     def buildElements(self):
+        super(ContentView, self).buildElements()
         self.contLW = QtGui.QListWidget()
+        self.detailLW = QtGui.QWidget()
         self.verionLW = QtGui.QListWidget()
-
-        #self.contLO = QtGui.QBoxLayout()
         return
         
     def buildWidget(self):
-        self.mainLO.addWidget(self.contLW, 0, 0, 10, 5)
-        v = buttonView.ButtonView()
-        v.do(self.dataCtrl)
-        self.mainLO.addWidget(v, 0, 5)
-        self.mainLO.addWidget(self.verionLW, 1, 5, 9, 1)
-        self.setLayout(self.mainLO)
+        super(ContentView, self).buildWidget()
+
+        self.mainLO.addWidget(self.mainFrame)
+
+        self.frameLO.addWidget(self.titleLabel, 0, 0, 1, 2, self.centerAlign)
+        self.frameLO.addWidget(self.contLW, 1, 0, 2, 1)
+        self.frameLO.addWidget(self.detailLW, 1, 1)
+        self.frameLO.addWidget(self.verionLW, 2, 1)
 
         self.contLW.setResizeMode(QtGui.QListView.Adjust)
+        self.contLW.setMinimumWidth(250)
         self.contLW.setSpacing(2)
         self.contLW.setViewMode(QtGui.QListView.IconMode)
         self.contLW.setUniformItemSizes(True)
 
+        self.detailLW.setFixedWidth(200)
+        self.detailLW.setFixedHeight(200)
         self.verionLW.setFixedWidth(200)
+
+        self.titleLabel.setText('Content')
 
     def connectFunc(self):
         self.contLW.itemClicked.connect(self.diao)
@@ -73,7 +80,7 @@ class ContentView(basisView.BasisView):
             #'''
             v = buttonView.ButtonView()
             v.do(self.dataCtrl)
-            #self.mainLO.addWidget(v)
+            #self.frameLO.addWidget(v)
             self.contLW.setItemWidget(item, v)
             #'''
 
