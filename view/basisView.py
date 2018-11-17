@@ -1,8 +1,9 @@
 try:
     from PySide2 import QtGui
+    from PySide2 import QtCore
 except:
     from PySide import QtGui
-
+    from PySide import QtCore
 
 class BasisView(QtGui.QDialog):
     def __init__(self, parent=None):
@@ -25,7 +26,9 @@ class BasisView(QtGui.QDialog):
     def initCtrl(self, dataCtrl):
         self.dataCtrl = dataCtrl
 
-    def buildElement(self):
+    def buildElements(self):
+        self.titleLabel = QtGui.QLabel()
+        self.centerAlign = QtCore.Qt.Alignment(4)
         return
 
     def buildLayout(self):

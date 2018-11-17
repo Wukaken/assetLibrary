@@ -12,7 +12,7 @@ from . import basisView
 class RootView(basisView.BasisView):
     updateDirViewSignal = QtCore.Signal()
     
-    def __init__(self, dataCtrl, parent=None):
+    def __init__(self, parent=None):
         super(RootView, self).__init__(parent)
 
     def buildElements(self):
@@ -46,7 +46,7 @@ class RootView(basisView.BasisView):
             self.emitUpdateSignal()
 
     def initContent(self):
-        rootDir = self.getDataVal('projectRoot')
+        rootDir = self.dataCtrl.getDataVal('projectRoot')
         self.projPathLE.setText(rootDir)
 
     def emitUpdateSignal(self):
