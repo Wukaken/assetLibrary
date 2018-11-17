@@ -35,9 +35,9 @@ class ButtonView(basisView.BasisView):
         self.labelWidInfo = {}
 
     def buildElements(self):
+        super(ButtonView, self).buildElements()
+        
         outInfoKeys = self.dataCtrl.getDataVal('outInfoKeys')
-        self.mainFrame = QtGui.QFrame()
-
         self.picLabel = QtGui.QLabel()
         self.funcBtn = QtGui.QToolButton()
         self.picmap = QtGui.QPixmap()
@@ -47,33 +47,34 @@ class ButtonView(basisView.BasisView):
             label = QtGui.QLabel()
             self.labelWidInfo[outInfoKey] = label
 
-        self.firLO = QtGui.QGridLayout()
-
     def buildWidget(self):
-        self.firLO.addWidget(self.mainFrame, 0, 0)
+        super(ButtonView, self).buildWidget()
         
-        self.mainLO.addWidget(self.picLabel, 0, 0, 3, 3)
+        self.mainLO.addWidget(self.mainFrame)
+
+        self.frameLO.addWidget(self.picLabel, 0, 0, 3, 3)
         i = 3
         outInfoKeys = self.dataCtrl.getDataVal('outInfoKeys')
         for outInfoKey in outInfoKeys:
             label = self.labelWidInfo[outInfoKey]
-            self.mainLO.addWidget(label, i, 0, 1, 3)
+            self.frameLO.addWidget(label, i, 0, 1, 3)
             i += 1
 
         i -= 1
-        self.mainLO.addWidget(self.funcBtn, i, 2)
+        self.frameLO.addWidget(self.funcBtn, i, 2)
 
-
-        self.mainFrame.setLayout(self.mainLO)
-        self.mainFrame.setFrameShape(QtGui.QFrame.Box)
-        
-        self.setLayout(self.firLO)
         scaleFractor = self.dataCtrl.getDataVal('scaleFractor', 1)
-        widSize = [200, 220]
-        picSize = [160, 130]
-        self.setFixedSize(widSize[0] * scaleFractor, widSize[1] * scaleFractor)
 
-        self.picLabel.setFixedSize(picSize[0] * scaleFractor, picSize[1] * scaleFractor)
+        defWidSize = self.dataCtrl.getDataVal(
+            'buttonWidgetSize', [176, 168])
+        defPicSize = self.dataCtrl.getDataVal(
+            'buttonPicmapSize', [160, 100])
+        widSize = [defWidSize[0] * scaleFractor,
+                   defWidSize[1] * scaleFractor]
+        picSize = [defPicSize[0] * scaleFractor,
+                   defPicSize[1] * scaleFractor]
+        self.setFixedSize(widSize[0], widSize[1])
+        self.picLabel.setFixedSize(picSize[0], picSize[1])
 
     def connectFunc(self):
         #self.funcCB.activated.connect(self.itemInnerFunc)
@@ -81,6 +82,7 @@ class ButtonView(basisView.BasisView):
 
     def initContent(self):
         pic = self.dataCtrl.getDataVal('picFile')
+        pic = '/Users/wujiajian/Desktop/pipeline-1.jpg'
 
         self.picmap.load(pic)
         self.picLabel.setPixmap(self.picmap)

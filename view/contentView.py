@@ -40,6 +40,9 @@ class ContentView(basisView.BasisView):
         self.contLW = QtGui.QListWidget()
         self.detailLW = QtGui.QWidget()
         self.verionLW = QtGui.QListWidget()
+        
+        self.detailLabel = QtGui.QLabel('Detail:')
+        self.historyLabel = QtGui.QLabel('History:')
         return
         
     def buildWidget(self):
@@ -48,13 +51,15 @@ class ContentView(basisView.BasisView):
         self.mainLO.addWidget(self.mainFrame)
 
         self.frameLO.addWidget(self.titleLabel, 0, 0, 1, 2, self.centerAlign)
-        self.frameLO.addWidget(self.contLW, 1, 0, 2, 1)
-        self.frameLO.addWidget(self.detailLW, 1, 1)
-        self.frameLO.addWidget(self.verionLW, 2, 1)
+        self.frameLO.addWidget(self.contLW, 1, 0, 4, 1)
+        self.frameLO.addWidget(self.detailLabel, 1, 1, self.centerAlign)
+        self.frameLO.addWidget(self.detailLW, 2, 1)
+        self.frameLO.addWidget(self.historyLabel, 3, 1, self.centerAlign)
+        self.frameLO.addWidget(self.verionLW, 4, 1)
 
         self.contLW.setResizeMode(QtGui.QListView.Adjust)
         self.contLW.setMinimumWidth(250)
-        self.contLW.setSpacing(2)
+        self.contLW.setSpacing(1)
         self.contLW.setViewMode(QtGui.QListView.IconMode)
         self.contLW.setUniformItemSizes(True)
 
@@ -68,6 +73,8 @@ class ContentView(basisView.BasisView):
         self.contLW.itemClicked.connect(self.diao)
 
     def initContent(self):
+        defWidSize = self.dataCtrl.getDataVal(
+            'buttonWidgetSize', [176, 168])
         for i in range(5):
             #'''
             #picmap = QtGui.QPixmap()
@@ -75,7 +82,8 @@ class ContentView(basisView.BasisView):
             #icon = QtGui.QIcon(picmap)
             #item = QtGui.QListWidgetItem(icon, 'idao')
             item = QtGui.QListWidgetItem()
-            item.setSizeHint(QtCore.QSize(200, 220))
+
+            item.setSizeHint(QtCore.QSize(defWidSize[0] + 2, defWidSize[1] + 2))
             self.contLW.addItem(item)
             #'''
             v = buttonView.ButtonView()
