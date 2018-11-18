@@ -58,6 +58,7 @@ class ContentView(basisView.BasisView):
 
     def connectFunc(self):
         self.contLW.itemClicked.connect(self.showItemDetails)
+        self.versionLW.itemClicked.connect(self.renewVersionSelection)
 
     def initContent(self):
         self.clearContentWidget()
@@ -117,7 +118,8 @@ class ContentView(basisView.BasisView):
         fileName = metaData.get('fileName')
         fileType = metaData.get('fileType')
         updateInfo = {'detailFileName': fileName,
-                      'detailFileType': fileType}
+                      'detailFileType': fileType,
+                      'versionSelIds': []}
         self.dataCtrl.setData(updateInfo)
         self.dataCtrl.getDetailVersionInfo()
         
@@ -165,3 +167,20 @@ class ContentView(basisView.BasisView):
         btnC.do(btnV, btnM)
         btnV.do(btnC)
         listWid.setItemWidget(item, btnV)
+
+    def renewVersionSelection(self):
+        self.versionLW.itemClicked.disconnect(self.renewVersionSelection)
+        versionSelIds = []
+        items = self.versionLW.selectedItems()
+        popItems = items[:-2]
+        selItems = items[-2:]
+        for item in selItems:
+            rowId = self.versionLW.row(item)
+            versionSelIds.append(rowId)
+
+        for popItem in popItems:
+            popItem.setSelected(0)
+
+        updateInfo = {'versionSelIds': versionSelIds}
+        self.dataCtrl.setData(updateInfo)
+        self.versionLW.itemClicked.connect(self.renewVersionSelection)

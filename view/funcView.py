@@ -39,8 +39,8 @@ class FuncView(basisView.BasisView):
         self.frameLO.addWidget(self.fnLabel, 2, 0)
         self.frameLO.addWidget(self.fnLE, 2, 1)
 
-        self.frameLO.addWidget(self.autoFnBtn, 3, 0)
-        self.frameLO.addWidget(self.chkInBtn, 3, 1)
+        self.frameLO.addWidget(self.chkInBtn, 3, 0)
+        self.frameLO.addWidget(self.autoFnBtn, 3, 1)
 
         self.frameLO.addWidget(self.mailLabel, 4, 0, self.centerAlign)
 
