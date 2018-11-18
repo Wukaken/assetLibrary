@@ -34,9 +34,13 @@ class BasisModel(object):
         if not activeFileTypes:
             activeFileTypes = fileTypes[:]
         else:
-            for activeFileType in activeFileTypes:
-                if activeFileType in fileTypes:
-                    activeFileTypes.append(activeFileType)
+            rmIds = []
+            for i, fileType in enumerate(activeFileTypes):
+                if fileType not in fileTypes:
+                    rmIds.insert(0, i)
+
+            for rmId in rmIds:
+                activeFileTypes.pop(rmId)
 
         updateInfo = {'activeFileTypes': activeFileTypes}
         self.setDataVal(updateInfo)

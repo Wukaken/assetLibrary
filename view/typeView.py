@@ -34,14 +34,12 @@ class TypeView(basisView.BasisView):
 
     def connectFunc(self):
         self.chkOnBtn.clicked.connect(partial(self.checkStateChange, 1))
-        self.chkOnBtn.clicked.connect(partial(self.checkStateChange, 0))
+        self.chkOffBtn.clicked.connect(partial(self.checkStateChange, 0))
 
     def initContent(self):
         self.titleLabel.setText('File Type Filter')
         fileTypes = self.dataCtrl.getDataVal('fileTypes')
         activeFileTypes = self.dataCtrl.getDataVal('activeFileTypes')
-        print fileTypes
-        print activeFileTypes
         for fileType in fileTypes:
             item = QtGui.QListWidgetItem()
             ftCb = QtGui.QCheckBox(fileType, parent=self)
@@ -54,22 +52,17 @@ class TypeView(basisView.BasisView):
 
             ftCb.stateChanged.connect(self.typeChangeFunc)
 
-    def typeChangeFunc(self, i):
+    def typeChangeFunc(self):
         itemCount = self.typeLW.count()
         curActiveFileTypes = []
         for i in range(itemCount):
-            print i
             item = self.typeLW.item(i)
             cbWid = self.typeLW.itemWidget(item)
             if cbWid.isChecked():
                 fileType = str(cbWid.text())
-                print fileType
                 curActiveFileTypes.append(fileType)
 
         oriActiveFileTypes = self.dataCtrl.getDataVal('activeFileTypes', [])
-        print curActiveFileTypes
-        print oriActiveFileTypes
-        print 'diao'
         if set(oriActiveFileTypes) == set(curActiveFileTypes):
             updateInfo = {'activeFileTypes': curActiveFileTypes}
             self.dataCtrl.setData(updateInfo)
@@ -82,7 +75,15 @@ class TypeView(basisView.BasisView):
 
     def checkStateChange(self, chkState):
         itemCount = self.typeLW.count()
+        cbWids = []
         for i in range(itemCount):
             item = self.typeLW.item(i)
             cbWid = self.typeLW.itemWidget(item)
+            cbWid.stateChanged.disconnect(self.typeChangeFunc)
             cbWid.setChecked(chkState)
+            cbWids.append(cbWid)
+
+        for cbWid in cbWids:
+            cbWid.stateChanged.connect(self.typeChangeFunc)
+
+        self.typeChangeFunc()
