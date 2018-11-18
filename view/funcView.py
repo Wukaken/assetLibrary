@@ -45,7 +45,6 @@ class FuncView(basisView.BasisView):
         self.frameLO.addWidget(self.mailLabel, 4, 0, self.centerAlign)
 
         self.frameLO.addWidget(self.mailTE, 5, 0, 3, 2)
-        self.frameLO.addWidget(self.chkOutBtn, 8, 1)
 
         self.frameLO.setRowStretch(4, 1)
         self.titleLabel.setText('Function')

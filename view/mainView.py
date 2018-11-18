@@ -69,6 +69,8 @@ class MainView(QtGui.QDialog, basisView.BasisView):
         self.mainLO.setColumnStretch(0, 0)
         self.mainLO.setColumnStretch(1, 1)
 
+        self.setWindowTitle('Asset Library')
+
     def connectSignal(self):
         self.rootWid.updateDirViewSignal.connect(self.dirWid.initContent)
         self.dirWid.updateContViewSignal.connect(self.contentWid.initContent)

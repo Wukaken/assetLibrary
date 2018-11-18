@@ -1,4 +1,5 @@
 import os
+import re
 import basisControl
 
 
@@ -27,7 +28,14 @@ class MainControl(basisControl.BasisControl):
         validContentFiles = self.getDataVal('validContentFiles')
         activeFileTypes = self.getDataVal('activeFileTypes')
         contentFileInfo = {}
-        for f in validContentFiles:
+        self.genContentInfo(
+            validContentFiles, activeFileTypes, contentFileInfo)
+
+        updateInfo = {'contentFileInfo': contentFileInfo}
+        self.setData(updateInfo)
+
+    def genContentInfo(self, files, validTypes, fileInfo):
+        for f in files:
             info = {}
             self.dataObj.inputDataFromFile(f, info)
             metaData = info.get('metaData')
@@ -35,8 +43,28 @@ class MainControl(basisControl.BasisControl):
                 fileType = metaData.get('fileType')
                 metaKey = metaData.get('metaKey')
                 if metaKey == 'assetLibrary' and \
-                   fileType in activeFileTypes:
-                    contentFileInfo[f] = info
+                   fileType in validTypes:
+                    fileInfo[f] = info
 
-        updateInfo = {'contentFileInfo': contentFileInfo}
+    def getDetailVersionInfo(self):
+        currentDir = self.getDataVal('currentDir')
+        detailFileName = self.getDataVal('detailFileName')
+        detailFileType = self.getDataVal('detailFileType')
+        innerDir = os.path.join(currentDir, 'innerVersion').replace('\\', '/')
+
+        tem = os.listdir(innerDir)
+        header = '.'.join(detailFileName.split('.')[: -1])
+        mat = '^%s.v[\d]{3}.json$' % header
+        versionFiles = []
+        for t in tem:
+            if re.search(mat, t):
+                full = os.path.join(innerDir, t).replace('\\', '/')
+                versionFiles.append(full)
+
+        detailVersionInfo = {}
+        self.genContentInfo(
+            versionFiles, [detailFileType], detailVersionInfo)
+
+        updateInfo = {'detailVersionInfo': detailVersionInfo,
+                      'detailInnerDir': innerDir}
         self.setData(updateInfo)
