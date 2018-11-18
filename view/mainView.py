@@ -72,6 +72,7 @@ class MainView(QtGui.QDialog, basisView.BasisView):
     def connectSignal(self):
         self.rootWid.updateDirViewSignal.connect(self.dirWid.initContent)
         self.dirWid.updateContViewSignal.connect(self.contentWid.initContent)
+        self.typeWid.updateContViewSignal.connect(self.contentWid.initContent)
 
     def closeEvent(self, qevent):
         if self.dataCtrl:

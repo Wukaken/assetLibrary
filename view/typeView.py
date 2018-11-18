@@ -63,7 +63,7 @@ class TypeView(basisView.BasisView):
                 curActiveFileTypes.append(fileType)
 
         oriActiveFileTypes = self.dataCtrl.getDataVal('activeFileTypes', [])
-        if set(oriActiveFileTypes) == set(curActiveFileTypes):
+        if not set(oriActiveFileTypes) == set(curActiveFileTypes):
             updateInfo = {'activeFileTypes': curActiveFileTypes}
             self.dataCtrl.setData(updateInfo)
             

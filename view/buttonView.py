@@ -8,27 +8,7 @@ except:
 import basisView
 from functools import partial
 
-class dc(object):
-    def __init__(self):
-        self.data = {
-            #'picFile': '/Users/wujiajian/Desktop/pipeline-1.jpg',
-            'picFile': 'D:/a.png',
-            'fileName': 'a_sdfadsfefewfwfewecdwcwcwtex.ma',
-            'descStr': 'i am a test, i am a test,i am a testi am a test,,i am a testi am a test',
-            'fileType': 'Maya Look File',
-            'version': 'v001',
-            'tipKeys': ['fileName', 'fileType', 'version', 'descStr'],
-            'funcKeys': ['', 'efew', 'ereip'],
-            'funcInfo': {},
-            'outInfoKeys': ['fileName', 'fileType']
-        }
-        
-    def getDataVal(self, key, defVal=None):
-        return self.data.get(key, defVal)
 
-    def setData(self, updateInfo):
-        self.data.update(updateInfo)
-        
 class ButtonView(basisView.BasisView):
     def __init__(self, parent=None):
         super(ButtonView, self).__init__(parent)
@@ -81,8 +61,9 @@ class ButtonView(basisView.BasisView):
         return
 
     def initContent(self):
+        currentDir = self.dataCtrl.getDataVal('currentDir')
         pic = self.dataCtrl.getDataVal('picFile')
-        pic = '/Users/wujiajian/Desktop/pipeline-1.jpg'
+        picFile = os.path.join(currentDir, pic).replace('\\', '/')
 
         self.picmap.load(pic)
         self.picLabel.setPixmap(self.picmap)
