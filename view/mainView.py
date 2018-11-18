@@ -14,7 +14,7 @@ from . import rootView
 from . import typeView
 
 
-class MainView(basisView.BasisView):
+class MainView(QtGui.QDialog, basisView.BasisView):
     def __init__(self, parent=None):
         super(MainView, self).__init__(parent)
 
@@ -69,16 +69,9 @@ class MainView(basisView.BasisView):
         self.mainLO.setColumnStretch(0, 0)
         self.mainLO.setColumnStretch(1, 1)
 
-    def connectFunc(self):
-        return
-
-    def initContent(self):
-        return
-
     def connectSignal(self):
-        return
-        #self.rootObj.updateDirViewSignal.connect(self.dirObj.initContent)
-        #self.dirObj.updateContViewSignal.connect(self.contObj.initContent)
+        self.rootWid.updateDirViewSignal.connect(self.dirWid.initContent)
+        self.dirWid.updateContViewSignal.connect(self.contentWid.initContent)
 
     def closeEvent(self, qevent):
         if self.dataCtrl:

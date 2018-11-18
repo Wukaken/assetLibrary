@@ -6,34 +6,14 @@ except:
     from PySide import QtCore
 
 import basisView
-from functools import partial
 import buttonView
-
-class dc(object):
-    def __init__(self):
-        self.data = {
-            #'picFile': '/Users/wujiajian/Desktop/pipeline-1.jpg',
-            'picFile': 'D:/a.png',
-            'fileName': 'a_sdfadsfefewfwfewecdwcwcwtex.ma',
-            'descStr': 'i am a test, i am a test,i am a testi am a test,,i am a testi am a test',
-            'fileType': 'Maya Look File',
-            'version': 'v001',
-            'tipKeys': ['fileName', 'fileType', 'version', 'descStr'],
-            'funcKeys': ['', 'efew', 'ereip'],
-            'funcInfo': {},
-            'outInfoKeys': ['fileName', 'fileType']
-        }
-        
-    def getDataVal(self, key, defVal=None):
-        return self.data.get(key, defVal)
-
-    def setData(self, updateInfo):
-        self.data.update(updateInfo)
+from functools import partial
 
 
 class ContentView(basisView.BasisView):
     def __init__(self, parent=None):
         super(ContentView, self).__init__(parent)
+        self.num = 5
 
     def buildElements(self):
         super(ContentView, self).buildElements()
@@ -73,9 +53,16 @@ class ContentView(basisView.BasisView):
         self.contLW.itemClicked.connect(self.diao)
 
     def initContent(self):
+        self.clearContentWidget()
+        self.renewContentWidget()
+
+    def clearContentWidget(self):
+        self.contLW.clear()
+
+    def renewContentWidget(self):
         defWidSize = self.dataCtrl.getDataVal(
             'buttonWidgetSize', [176, 168])
-        for i in range(5):
+        for i in range(self.num):
             #'''
             #picmap = QtGui.QPixmap()
             #picmap.load('D:/a.png')
@@ -91,6 +78,8 @@ class ContentView(basisView.BasisView):
             #self.frameLO.addWidget(v)
             self.contLW.setItemWidget(item, v)
             #'''
+
+        self.num -= 1
 
     def diao(self, item):
         print item

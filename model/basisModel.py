@@ -4,14 +4,14 @@ import json
 
 class BasisModel(object):
     def __init__(self, inJson, inData={}, presetJson=None):
-        self.storeKeys = []
+        self.storeKeys = ['projectRoot', 'currentDir', 'activeFileTypes']
         self.data = inData
         self.inJson = inJson
         self.presetJson = presetJson
         for curJson in [inJson, presetJson]:
-            if curJson and os.path.isfile(self.inJson):
+            if curJson and os.path.isfile(curJson):
                 inJsonData = {}
-                self.inputDataFromFile(self.inJson, inJsonData)
+                self.inputDataFromFile(curJson, inJsonData)
                 self.completeData(inJsonData)
 
         self.normalizeData()
@@ -28,6 +28,18 @@ class BasisModel(object):
                     'tipKeys': ['fileName', 'fileType', 'version', 'descStr'],
                     'outInfoKeys': ['fileName', 'descStr']}
         self.completeData(initData)
+
+        activeFileTypes = self.getDataVal('activeFileTypes', [])
+        fileTypes = self.getDataVal('fileTypes')
+        if not activeFileTypes:
+            activeFileTypes = fileTypes[:]
+        else:
+            for activeFileType in activeFileTypes:
+                if activeFileType in fileTypes:
+                    activeFileTypes.append(activeFileType)
+
+        updateInfo = {'activeFileTypes': activeFileTypes}
+        self.setDataVal(updateInfo)
 
     def completeData(self, inData):
         for key, val in inData.items():

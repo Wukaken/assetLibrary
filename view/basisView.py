@@ -5,7 +5,7 @@ except:
     from PySide import QtGui
     from PySide import QtCore
 
-class BasisView(QtGui.QDialog):
+class BasisView(QtGui.QWidget):
     def __init__(self, parent=None):
         super(BasisView, self).__init__(parent)
         self.dataCtrl = None
@@ -43,6 +43,7 @@ class BasisView(QtGui.QDialog):
         self.mainLO.setContentsMargins(4, 2, 4, 4)
         self.frameLO.setSpacing(3)
         self.frameLO.setContentsMargins(3, 2, 3, 4)
+        self.setWindowFlags(QtCore.Qt.Window)
 
     def connectFunc(self):
         return

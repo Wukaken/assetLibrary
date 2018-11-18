@@ -8,29 +8,10 @@ except:
 import basisView
 from functools import partial
 
-class dc(object):
-    def __init__(self):
-        self.data = {
-            #'picFile': '/Users/wujiajian/Desktop/pipeline-1.jpg',
-            'picFile': 'D:/a.png',
-            'fileName': 'a_sdfadsfefewfwfewecdwcwcwtex.ma',
-            'descStr': 'i am a test, i am a test,i am a testi am a test,,i am a testi am a test',
-            'fileType': 'Maya Look File',
-            'version': 'v001',
-            'tipKeys': ['fileName', 'fileType', 'version', 'descStr'],
-            'funcKeys': ['', 'efew', 'ereip'],
-            'funcInfo': {},
-            'outInfoKeys': ['fileName', 'fileType'],
-            'fileTypes': ['Maya Look Dev', 'Maya Rig']
-        }
-        
-    def getDataVal(self, key, defVal=None):
-        return self.data.get(key, defVal)
 
-    def setData(self, updateInfo):
-        self.data.update(updateInfo)
-        
 class TypeView(basisView.BasisView):
+    updateContViewSignal = QtCore.Signal()
+    
     def __init__(self, parent=None):
         super(TypeView, self).__init__(parent)
         self.labelWidInfo = {}
@@ -51,30 +32,57 @@ class TypeView(basisView.BasisView):
         self.frameLO.addWidget(self.chkOnBtn, 2, 0)
         self.frameLO.addWidget(self.chkOffBtn, 2, 1)
 
-        # self.setFixedWidth(250)
-
     def connectFunc(self):
-        #self.funcCB.activated.connect(self.itemInnerFunc)
-        return
+        self.chkOnBtn.clicked.connect(partial(self.checkStateChange, 1))
+        self.chkOnBtn.clicked.connect(partial(self.checkStateChange, 0))
 
     def initContent(self):
         self.titleLabel.setText('File Type Filter')
         fileTypes = self.dataCtrl.getDataVal('fileTypes')
+        activeFileTypes = self.dataCtrl.getDataVal('activeFileTypes')
+        print fileTypes
+        print activeFileTypes
         for fileType in fileTypes:
             item = QtGui.QListWidgetItem()
             ftCb = QtGui.QCheckBox(fileType, parent=self)
+            if fileType in activeFileTypes:
+                ftCb.setChecked(2)
+
             self.typeLW.addItem(item)
             self.typeLW.setItemWidget(item, ftCb)
             item.setToolTip('FileType: %s' % fileType)
 
+            ftCb.stateChanged.connect(self.typeChangeFunc)
 
+    def typeChangeFunc(self, i):
+        itemCount = self.typeLW.count()
+        curActiveFileTypes = []
+        for i in range(itemCount):
+            print i
+            item = self.typeLW.item(i)
+            cbWid = self.typeLW.itemWidget(item)
+            if cbWid.isChecked():
+                fileType = str(cbWid.text())
+                print fileType
+                curActiveFileTypes.append(fileType)
+
+        oriActiveFileTypes = self.dataCtrl.getDataVal('activeFileTypes', [])
+        print curActiveFileTypes
+        print oriActiveFileTypes
+        print 'diao'
+        if set(oriActiveFileTypes) == set(curActiveFileTypes):
+            updateInfo = {'activeFileTypes': curActiveFileTypes}
+            self.dataCtrl.setData(updateInfo)
             
-if __name__ == '__main__':
-    import sys
+            self.dataCtrl.genFileContentInfo()
+            self.emitUpdateSignal()
 
-    app = QtGui.QApplication(sys.argv)
-    ctrl = dc()
-    v = TypeView()
-    v.do(ctrl)
-    v.show()
-    app.exec_()        
+    def emitUpdateSignal(self):
+        self.updateContViewSignal.emit()
+
+    def checkStateChange(self, chkState):
+        itemCount = self.typeLW.count()
+        for i in range(itemCount):
+            item = self.typeLW.item(i)
+            cbWid = self.typeLW.itemWidget(item)
+            cbWid.setChecked(chkState)

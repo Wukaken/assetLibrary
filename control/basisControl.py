@@ -1,6 +1,3 @@
-import os
-
-
 class BasisControl(object):
     def __init__(self):
         self.widget = None
@@ -26,3 +23,7 @@ class BasisControl(object):
             outVal = self.dataObj.getDataVal(specKey, defVal=defVal)
             
         return outVal
+
+    def outputPresetDataFile(self):
+        if self.dataObj:
+            self.dataObj.outPresetFile()

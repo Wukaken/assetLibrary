@@ -36,19 +36,36 @@ class RootView(basisView.BasisView):
         self.frameLO.setColumnStretch(2, 0)
 
     def connectFunc(self):
-        self.specBtn.clicked.connect(self.specProjPath)
+        self.specBtn.clicked.connect(self.browseProjPath)
+        self.projPathLE.returnPressed.connect(self.specProjPath)
 
-    def specProjPath(self):
-        defaultDir = os.path.expanduser('~')
-        oriDir = self.dataCtrl.getDataVal(
-            'projectRoot', defaultDir)
+    def browseProjPath(self):
+        oriDir = self.dataCtrl.getDataVal('projectRoot')
         newDir = QtGui.QFileDialog.getExistingDirectory(
             self, "Choose Project Root", oriDir)
-        newDir = newDir.replace('\\', '/')
-        if os.path.isdir(newDir) and not newDir == oriDir:
-            updateInfo = {'projectRoot': newDir}
+        if newDir:
+            newDir = newDir.replace('\\', '/')
+            updateInfo = {'newProjectRoot': newDir}
             self.dataCtrl.setData(updateInfo)
+            self.renewProjPath()
 
+    def specProjPath(self):
+        newDir = str(self.projPathLE.text())
+        if os.path.isdir(newDir):
+            newDir = newDir.replace('\\', '/')
+            updateInfo = {'newProjectRoot': newDir}
+            self.dataCtrl.setData(updateInfo)
+            self.renewProjPath()
+
+    def renewProjPath(self):
+        oriProjDir = self.dataCtrl.getDataVal('projectRoot')
+        newProjDir = self.dataCtrl.getDataVal('newProjectRoot')
+        if newProjDir and not newProjDir == oriProjDir:
+            updateInfo = {'projectRoot': newProjDir,
+                          'currentDir': newProjDir,
+                          'currentDirs': [newProjDir],
+                          'currentDirId': 0}
+            self.dataCtrl.setData(updateInfo)
             self.initContent()
 
             self.emitUpdateSignal()

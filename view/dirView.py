@@ -6,22 +6,9 @@ except:
     from PySide import QtGui
     from PySide import QtCore
 
-# from . import basisView
 import basisView
 from functools import partial
 
-class dc(object):
-    def __init__(self):
-        self.data = {
-            'projectRoot': '/Users/wujiajian',
-            'currentDir': '/Users/wujiajian/Documents/sofeware/a'
-        }
-        
-    def getDataVal(self, key, defVal=None):
-        return self.data.get(key, defVal)
-
-    def setData(self, updateInfo):
-        self.data.update(updateInfo)
 
 class DirView(basisView.BasisView):
     updateContViewSignal = QtCore.Signal()
@@ -51,8 +38,6 @@ class DirView(basisView.BasisView):
 
         self.frameLO.setRowStretch(0, 0)
         self.frameLO.setRowStretch(1, 0)
-        
-        # self.setFixedWidth(250)
 
     def connectFunc(self):
         self.backwardBtn.clicked.connect(partial(self.moveCurrentDir, 1))
@@ -60,7 +45,11 @@ class DirView(basisView.BasisView):
         self.dirTreeWid.itemClicked.connect(self.renewCurrentDir)
 
     def initContent(self):
+        self.clearDirView()
         self.refreshCurrentDirView()
+
+    def clearDirView(self):
+        self.dirTreeWid.clear()
 
     def refreshCurrentDirView(self):
         projRoot = self.dataCtrl.getDataVal('projectRoot')
@@ -136,6 +125,7 @@ class DirView(basisView.BasisView):
 
         updateInfo = {'currentDir': outCurPath}
         self.dataCtrl.setData(updateInfo)
+        self.dataCtrl.genDirValidContentInfo()
         self.emitUpdateSignal()
 
     def renewCurrentDir(self, curTwItem, actId):
@@ -180,14 +170,3 @@ class DirView(basisView.BasisView):
 
         self.dataCtrl.setData(updateInfo)
         self.refreshCurrentDirView()
-
-        
-if __name__ == '__main__':
-    import sys
-
-    app = QtGui.QApplication(sys.argv)
-    ctrl = dc()
-    v = DirView()
-    v.do(ctrl)
-    v.show()
-    app.exec_()

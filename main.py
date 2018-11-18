@@ -1,6 +1,6 @@
 import os
 from model import basisModel
-from control import basisControl
+from control import mainControl
 
 
 class Main(object):
@@ -11,17 +11,21 @@ class Main(object):
         self.inDict = inDict
         self.viewInit = viewInit
 
-        self.appDir = os.path.join(os.path.expanduser('~'), 'assetLib')
+        self.mainKey = 'assetLibPreset'
+        self.appDir = os.path.join(os.path.expanduser('~'), self.mainKey)
         if not os.path.isdir(self.appDir):
             os.makedirs(self.appDir)
+
+        self.presetJson = os.path.join(self.appDir, '%s.json' % self.mainKey)
         
     def initInfo(self):
         if self.viewInit:
             from view import mainView
             self.wid = mainView.MainView(self.parent)
 
-        self.ctrl = basisControl.BasisControl()
-        self.dataObj = basisModel.BasisModel(self.inJson, self.inDict)
+        self.ctrl = mainControl.MainControl()
+        self.dataObj = basisModel.BasisModel(
+            self.inJson, inData=self.inDict, presetJson=self.presetJson)
         self.ctrl.do(self.wid, self.dataObj)
 
     def do(self):
