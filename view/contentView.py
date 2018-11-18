@@ -13,6 +13,8 @@ from functools import partial
 
 
 class ContentView(basisView.BasisView):
+    updateCmpViewSignal = QtCore.Signal()
+    
     def __init__(self, parent=None):
         super(ContentView, self).__init__(parent)
 
@@ -39,7 +41,7 @@ class ContentView(basisView.BasisView):
         self.frameLO.addWidget(self.versionLW, 4, 1)
 
         self.contLW.setResizeMode(QtGui.QListView.Adjust)
-        self.contLW.setMinimumWidth(250)
+        self.contLW.setMinimumWidth(180)
         self.contLW.setSpacing(1)
         self.contLW.setViewMode(QtGui.QListView.IconMode)
         self.contLW.setUniformItemSizes(True)

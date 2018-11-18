@@ -4,8 +4,9 @@ import json
 
 class BasisModel(object):
     def __init__(self, inJson, inData={}, presetJson=None):
-        self.storeKeys = ['projectRoot', 'currentDir', 'activeFileTypes',
-                          'fileTypes']
+        self.storeKeys = [
+            'projectRoot', 'currentDir', 'activeFileTypes',
+            'fileTypes', 'mailList']
         self.data = inData
         self.inJson = inJson
         self.presetJson = presetJson

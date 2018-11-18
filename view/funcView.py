@@ -21,11 +21,13 @@ class FuncView(basisView.BasisView):
 
         self.fnLabel = QtGui.QLabel('File Name:')
         self.fnLE = QtGui.QLineEdit()
-        self.autoFnBtn = QtGui.QPushButton('Config File Name')
+        self.autoCfgBtn = QtGui.QPushButton('Auto Config')
 
         self.mailLabel = QtGui.QLabel('Mail List:')
         self.mailTE = QtGui.QTextEdit()
         self.chkInBtn = QtGui.QPushButton('Check In')
+
+        self.setMlBtn = QtGui.QPushButton('Set Mail List')
 
     def buildWidget(self):
         super(FuncView, self).buildWidget()
@@ -40,22 +42,38 @@ class FuncView(basisView.BasisView):
         self.frameLO.addWidget(self.fnLE, 2, 1)
 
         self.frameLO.addWidget(self.chkInBtn, 3, 0)
-        self.frameLO.addWidget(self.autoFnBtn, 3, 1)
+        self.frameLO.addWidget(self.autoCfgBtn, 3, 1)
 
         self.frameLO.addWidget(self.mailLabel, 4, 0, self.centerAlign)
-
+        self.frameLO.addWidget(self.setMlBtn, 4, 1)
         self.frameLO.addWidget(self.mailTE, 5, 0, 3, 2)
 
         self.frameLO.setRowStretch(4, 1)
         self.titleLabel.setText('Function')
-        # self.setFixedWidth(250)
 
     def connectFunc(self):
-        return
+        self.setMlBtn.clicked.connect(self.renewMailList)
+        self.autoCfgBtn.clicked.connect(self.autoConfig)
 
     def initContent(self):
         fileTypes = self.dataCtrl.getDataVal('fileTypes')
         self.ftCB.addItems(fileTypes)
+        
+        mailList = self.dataCtrl.getDataVal('mailList', [])
+        mailStr = '\n'.join(mailList)
+        self.mailTE.setText(mailStr)
+
+    def renewMailList(self):
+        mailStr = self.mailTE.toPlainText()
+        mailList = []
+        if '\r\n' in mailStr:
+            mailList = mailStr.split('\r\n')
+        else:
+            mailList = mailStr.split('\n')
+
+        updateInfo = {'mailList': mailList}
+        self.dataCtrl.setData(updateInfo)
+        
 
 
 if __name__ == '__main__':
