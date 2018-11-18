@@ -20,14 +20,19 @@ class BasisModel(object):
     def normalizeData(self):
         userDir = os.path.expanduser('~')
         currentDir = self.getDataVal('currentDir', userDir)
-        initData = {'projectRoot': userDir,
-                    'currentDir': userDir,
-                    'currentDirs': [currentDir],
-                    'currentDirId': 0,
+        initData = {
+            'projectRoot': userDir,
+            'currentDir': userDir,
+            'currentDirs': [currentDir],
+            'currentDirId': 0,
 
-                    'fileTypes': ['Maya Look File', 'Maya Rig File'],
-                    'tipKeys': ['fileName', 'fileType', 'version', 'descStr'],
-                    'outInfoKeys': ['fileName', 'descStr']}
+            'fileTypes': ['Maya Look File', 'Maya Rig File'],
+            'tipKeys': ['fileName', 'fileType', 'version', 'descStr'],
+            'outInfoKeys': ['fileName', 'descStr'],
+            'buttonWidgetSize': [176, 168],
+            'buttonPicmapSize': [160, 100],
+            'buttonWidgetScaleFractor': 1
+        }
         self.completeData(initData)
 
         activeFileTypes = self.getDataVal('activeFileTypes', [])

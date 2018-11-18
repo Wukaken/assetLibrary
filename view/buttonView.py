@@ -1,3 +1,4 @@
+import os
 try:
     from PySide2 import QtGui
     from PySide2 import QtCore
@@ -43,12 +44,11 @@ class ButtonView(basisView.BasisView):
         i -= 1
         self.frameLO.addWidget(self.funcBtn, i, 2)
 
-        scaleFractor = self.dataCtrl.getDataVal('scaleFractor', 1)
-
+        scaleFractor = self.dataCtrl.getDataVal('scaleFractor')
         defWidSize = self.dataCtrl.getDataVal(
-            'buttonWidgetSize', [176, 168])
+            'defWidSize')
         defPicSize = self.dataCtrl.getDataVal(
-            'buttonPicmapSize', [160, 100])
+            'defPicSize')
         widSize = [defWidSize[0] * scaleFractor,
                    defWidSize[1] * scaleFractor]
         picSize = [defPicSize[0] * scaleFractor,
@@ -57,25 +57,26 @@ class ButtonView(basisView.BasisView):
         self.picLabel.setFixedSize(picSize[0], picSize[1])
 
     def connectFunc(self):
-        #self.funcCB.activated.connect(self.itemInnerFunc)
+        # self.funcCB.activated.connect(self.itemInnerFunc)
         return
 
     def initContent(self):
         currentDir = self.dataCtrl.getDataVal('currentDir')
-        pic = self.dataCtrl.getDataVal('picFile')
+        metaData = self.dataCtrl.getDataVal('metaData')
+        pic = metaData.get('picFile', '')
         picFile = os.path.join(currentDir, pic).replace('\\', '/')
 
-        self.picmap.load(pic)
+        self.picmap.load(picFile)
         self.picLabel.setPixmap(self.picmap)
         self.picLabel.setScaledContents(1)
 
         for outInfoKey, label in self.labelWidInfo.items():
-            mess = '%s: %s' % (outInfoKey, self.dataCtrl.getDataVal(outInfoKey))
+            val = metaData.get(outInfoKey, '')
+            mess = '%s: %s' % (outInfoKey, val)
             label.setText(mess)
-        #self.pubType
+
         self.funcBtn.setText('Menu')
         self.funcBtn.setMenu(self.menu)
-        #self.funcCB.addItems(funcKeys)
 
         self.setupFuncMenu()
         self.initTooltips()
@@ -84,33 +85,21 @@ class ButtonView(basisView.BasisView):
         funcKeys = self.dataCtrl.getDataVal('funcKeys', [])
         funcInfo = self.dataCtrl.getDataVal('funcInfo')
         for funcKey in funcKeys:
-            print funcKey
-            self.menu.addAction(funcKey, self.printInfo)
+            func = funcInfo.get(funcKey)
+            self.menu.addAction(funcKey, func)
 
     def initTooltips(self):
+        metaData = self.dataCtrl.getDataVal('metaData')
         for outInfoKey, label in self.labelWidInfo.items():
-            mess = '%s: %s' % (outInfoKey, self.dataCtrl.getDataVal(outInfoKey))
+            val = metaData.get(outInfoKey)
+            mess = '%s: %s' % (outInfoKey, val)
             label.setToolTip(mess)
 
-        tipKeys = self.dataCtrl.getDataVal('tipKeys')
+        tipsKeys = self.dataCtrl.getDataVal('tipsKeys')
         allMess = ''
-        for tipKey in tipKeys:
-            mess = '%s: %s\n' % (tipKey, self.dataCtrl.getDataVal(tipKey))
+        for tipsKey in tipsKeys:
+            val = metaData.get(tipsKey)
+            mess = '%s: %s\n' % (tipsKey, val)
             allMess += mess
             
         self.picLabel.setToolTip(allMess)
-
-    def printInfo(self):
-        print 'diao'
-
-
-            
-if __name__ == '__main__':
-    import sys
-
-    app = QtGui.QApplication(sys.argv)
-    ctrl = dc()
-    v = ButtonView()
-    v.do(ctrl)
-    v.show()
-    app.exec_()        

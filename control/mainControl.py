@@ -30,13 +30,13 @@ class MainControl(basisControl.BasisControl):
         for f in validContentFiles:
             info = {}
             self.dataObj.inputDataFromFile(f, info)
-            metaKey = info.get('metaKey')
-            fileType = info.get('fileType')
-            if metaKey == 'assetLibrary' and \
-               fileType in activeFileTypes:
-                contentFileInfo[f] = info
+            metaData = info.get('metaData')
+            if metaData:
+                fileType = metaData.get('fileType')
+                metaKey = metaData.get('metaKey')
+                if metaKey == 'assetLibrary' and \
+                   fileType in activeFileTypes:
+                    contentFileInfo[f] = info
 
         updateInfo = {'contentFileInfo': contentFileInfo}
         self.setData(updateInfo)
-
-        

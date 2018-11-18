@@ -9,28 +9,6 @@ import basisView
 import buttonView
 from functools import partial
 
-class dc(object):
-    def __init__(self):
-        self.data = {
-            #'picFile': '/Users/wujiajian/Desktop/pipeline-1.jpg',
-            'picFile': 'D:/a.png',
-            'fileName': 'a_sdfadsfefewfwfewecdwcwcwtex.ma',
-            'descStr': 'i am a test, i am a test,i am a testi am a test,,i am a testi am a test',
-            'fileType': 'Maya Look File',
-            'version': 'v001',
-            'tipKeys': ['fileName', 'fileType', 'version', 'descStr'],
-            'funcKeys': ['', 'efew', 'ereip'],
-            'fileTypes': ['Maya Look File', 'Maya Rig'],
-            'funcInfo': {},
-            'outInfoKeys': ['fileName', 'fileType']
-        }
-        
-    def getDataVal(self, key, defVal=None):
-        return self.data.get(key, defVal)
-
-    def setData(self, updateInfo):
-        self.data.update(updateInfo)
-
 
 class FuncView(basisView.BasisView):
     def __init__(self, parent=None):
@@ -48,7 +26,6 @@ class FuncView(basisView.BasisView):
         self.mailLabel = QtGui.QLabel('Mail List:')
         self.mailTE = QtGui.QTextEdit()
         self.chkInBtn = QtGui.QPushButton('Check In')
-        self.chkOutBtn = QtGui.QPushButton('Check Out')
 
     def buildWidget(self):
         super(FuncView, self).buildWidget()
@@ -62,12 +39,12 @@ class FuncView(basisView.BasisView):
         self.frameLO.addWidget(self.fnLabel, 2, 0)
         self.frameLO.addWidget(self.fnLE, 2, 1)
 
-        self.frameLO.addWidget(self.autoFnBtn, 3, 1)
+        self.frameLO.addWidget(self.autoFnBtn, 3, 0)
+        self.frameLO.addWidget(self.chkInBtn, 3, 1)
 
         self.frameLO.addWidget(self.mailLabel, 4, 0, self.centerAlign)
 
         self.frameLO.addWidget(self.mailTE, 5, 0, 3, 2)
-        self.frameLO.addWidget(self.chkInBtn, 8, 0)
         self.frameLO.addWidget(self.chkOutBtn, 8, 1)
 
         self.frameLO.setRowStretch(4, 1)

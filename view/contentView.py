@@ -7,13 +7,14 @@ except:
 
 import basisView
 import buttonView
+from control import buttonControl
+from model import buttonModel
 from functools import partial
 
 
 class ContentView(basisView.BasisView):
     def __init__(self, parent=None):
         super(ContentView, self).__init__(parent)
-        self.num = 5
 
     def buildElements(self):
         super(ContentView, self).buildElements()
@@ -60,44 +61,32 @@ class ContentView(basisView.BasisView):
         self.contLW.clear()
 
     def renewContentWidget(self):
-        defWidSize = self.dataCtrl.getDataVal(
-            'buttonWidgetSize', [176, 168])
-        for i in range(self.num):
-            #'''
-            #picmap = QtGui.QPixmap()
-            #picmap.load('D:/a.png')
-            #icon = QtGui.QIcon(picmap)
-            #item = QtGui.QListWidgetItem(icon, 'idao')
+        defWidSize = self.dataCtrl.getDataVal('buttonWidgetSize')
+        scaleFractor = self.dataCtrl.getDataVal('buttonWidgetScaleFractor')
+        itemSize = [defWidSize[0] * scaleFractor + 2,
+                    defWidSize[1] * scaleFractor + 2]
+
+        fileInfo = self.dataCtrl.getDataVal('contentFileInfo')
+        files = fileInfo.keys()
+        files.sort()
+        for f in files:
+            info = fileInfo[f]
             item = QtGui.QListWidgetItem()
 
-            item.setSizeHint(QtCore.QSize(defWidSize[0] + 2, defWidSize[1] + 2))
+            item.setSizeHint(QtCore.QSize(
+                itemSize[0], itemSize[1]))
             self.contLW.addItem(item)
-            #'''
-            v = buttonView.ButtonView()
-            v.do(self.dataCtrl)
-            #self.frameLO.addWidget(v)
-            self.contLW.setItemWidget(item, v)
-            #'''
+            self.buildUpItemView(info, item)
 
-        self.num -= 1
+    def buildUpItemView(self, info, item):
+        info['currentDir'] = self.dataCtrl.getDataVal('currentDir')
+        btnV = buttonView.ButtonView()
+        btnM = buttonModel.ButtonModel('', info)
+        btnC = buttonControl.ButtonControl()
 
-    def diao(self, item):
-        print item
+        btnC.do(btnV, btnM)
+        btnV.do(btnC)
+        self.contLW.setItemWidget(item, btnV)
 
-        popMenu = QtGui.QMenu()
-        item.setMenu(popMenu)
-        menu.addAction('asdfadf', self.printInfo)
-
-    def printInfo(self):
-        print 'getefdsq'
-
-if __name__ == '__main__':
-    import sys
-
-    app = QtGui.QApplication(sys.argv)
-    ctrl = dc()
-    v = ContentView()
-    v.do(ctrl)
-    v.show()
-    app.exec_()        
-            
+    def diao(self):
+        print 'idao'

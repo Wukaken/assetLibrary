@@ -1,0 +1,12 @@
+{
+  "typeFuncInfo": {
+    "Maya Look File": {
+      "Check Out": "print check out",
+      "Compare Diff": "Compare Diff"
+    },
+    "Maya Rig File": {
+      "Check Out": "print check out",
+      "Compare Diff": "Compare Diff"
+    }
+  }
+}
