@@ -7,10 +7,11 @@ except:
     from PySide import QtCore
 
 import basisView
-from functools import partial
 
 
 class ButtonView(basisView.BasisView):
+    checkOutFileSignal = QtCore.Signal(str, int)
+    
     def __init__(self, parent=None):
         super(ButtonView, self).__init__(parent)
         self.labelWidInfo = {}
@@ -103,3 +104,6 @@ class ButtonView(basisView.BasisView):
             allMess += mess
             
         self.picLabel.setToolTip(allMess)
+
+    def emitCheckOutSignal(self, outMess, checkOutTest):
+        self.checkOutFileSignal.emit(outMess, checkOutTest)

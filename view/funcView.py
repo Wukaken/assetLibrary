@@ -54,14 +54,26 @@ class FuncView(basisView.BasisView):
     def connectFunc(self):
         self.setMlBtn.clicked.connect(self.renewMailList)
         self.autoCfgBtn.clicked.connect(self.autoConfig)
+        self.ftCB.currentIndexChanged.connect(self.renewFileType)
+        self.chkInBtn.clicked.connect(self.checkInFile)
 
     def initContent(self):
         fileTypes = self.dataCtrl.getDataVal('fileTypes')
+        fileType = self.dataCtrl.getDataVal('fileType')
         self.ftCB.addItems(fileTypes)
-        
+        ftId = 0
+        if fileType in fileTypes:
+            ftId = fileTypes.index(fileType)
+            
+        self.ftCB.setCurrentIndex(ftId)
+
         mailList = self.dataCtrl.getDataVal('mailList', [])
         mailStr = '\n'.join(mailList)
         self.mailTE.setText(mailStr)
+
+        mayaInit = self.dataCtrl.getDataVal('mayaInit')
+        if not mayaInit:
+            self.chkInBtn.setEnabled(0)
 
     def renewMailList(self):
         mailStr = self.mailTE.toPlainText()
@@ -73,16 +85,20 @@ class FuncView(basisView.BasisView):
 
         updateInfo = {'mailList': mailList}
         self.dataCtrl.setData(updateInfo)
+
+    def autoConfig(self):
+        detailFileName = self.dataCtrl.getDataVal('detailFileName')
+        detailFileType = self.dataCtrl.getDataVal('detailFileType')
+        fileTypes = self.dataCtrl.getDataVal('fileTypes')
+        fileTypeId = fileTypes.index(detailFileType)
+        self.fnLE.setText(detailFileName)
+        self.ftCB.setCurrentIndex(fileTypeId)
+
+    def renewFileType(self, ftId):
+        fileType = self.ftCB.itemText(ftId)
+        updateInfo = {'fileType': fileType}
+        self.dataCtrl.setData(updateInfo)
+
+    def checkInFile(self):
         
-
-
-if __name__ == '__main__':
-    import sys
-
-    app = QtGui.QApplication(sys.argv)
-    ctrl = dc()
-    v = FuncView()
-    v.do(ctrl)
-    v.show()
-    app.exec_()        
-            
+        return

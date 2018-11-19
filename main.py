@@ -28,6 +28,15 @@ class Main(object):
             self.inJson, inData=self.inDict, presetJson=self.presetJson)
         self.ctrl.do(self.wid, self.dataObj)
 
+        mayaInit = 1
+        try:
+            from maya import cmds
+        except:
+            mayaInit = 0
+
+        updateInfo = {'mayaInit': mayaInit}
+        self.ctrl.setData(updateInfo)
+
     def do(self):
         self.initInfo()
         self.showUp()

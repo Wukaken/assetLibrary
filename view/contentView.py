@@ -9,7 +9,6 @@ import basisView
 import buttonView
 from control import buttonControl
 from model import buttonModel
-from functools import partial
 
 
 class ContentView(basisView.BasisView):
@@ -26,7 +25,6 @@ class ContentView(basisView.BasisView):
         
         self.detailLabel = QtGui.QLabel('Detail:')
         self.historyLabel = QtGui.QLabel('History:')
-        return
         
     def buildWidget(self):
         super(ContentView, self).buildWidget()
@@ -95,14 +93,19 @@ class ContentView(basisView.BasisView):
             listWid.addItem(item)
             buildItemFunc(info, item, listWid)
 
-    def buildUpContItemView(self, info, item, listWid):
-        info['currentDir'] = self.dataCtrl.getDataVal('currentDir')
+    def buildUpButtonView(self, info):
         btnV = buttonView.ButtonView()
         btnM = buttonModel.ButtonModel('', info)
         btnC = buttonControl.ButtonControl()
 
         btnC.do(btnV, btnM)
         btnV.do(btnC)
+        btnV.checkOutFileSignal.connect(self.checkOutAction)
+        return btnV
+
+    def buildUpContItemView(self, info, item, listWid):
+        info['currentDir'] = self.dataCtrl.getDataVal('currentDir')
+        btnV = self.buildUpButtonView(info)
         listWid.setItemWidget(item, btnV)
 
     def showItemDetails(self, item):
@@ -139,12 +142,8 @@ class ContentView(basisView.BasisView):
         info.update(oriBtnM.data)
         info['scaleFractor'] = 1.15
         info['outInfoKeys'] = info['tipsKeys']
-        btnV = buttonView.ButtonView()
-        btnM = buttonModel.ButtonModel('', info)
-        btnC = buttonControl.ButtonControl()
+        btnV = self.buildUpButtonView(info)
 
-        btnC.do(btnV, btnM)
-        btnV.do(btnC)
         self.detailW = btnV
         self.detailW.setFixedWidth(200)
         self.detailW.setFixedHeight(200)
@@ -162,12 +161,7 @@ class ContentView(basisView.BasisView):
     def buildUpVersionItemView(self, info, item, listWid):
         info['currentDir'] = self.dataCtrl.getDataVal('detailInnerDir')
         info['outInfoKeys'] = ['fileName', 'version']
-        btnV = buttonView.ButtonView()
-        btnM = buttonModel.ButtonModel('', info)
-        btnC = buttonControl.ButtonControl()
-
-        btnC.do(btnV, btnM)
-        btnV.do(btnC)
+        btnV = self.buildUpButtonView(info)
         listWid.setItemWidget(item, btnV)
 
     def renewVersionSelection(self):
@@ -186,3 +180,13 @@ class ContentView(basisView.BasisView):
         updateInfo = {'versionSelIds': versionSelIds}
         self.dataCtrl.setData(updateInfo)
         self.versionLW.itemClicked.connect(self.renewVersionSelection)
+
+    def checkOutAction(self, mess, checkOutTest):
+        if not checkOutTest:
+            self.buildUpCheckoutFailView()
+        else:
+            self.dataCtrl.triggerCheckoutMail(mess)
+
+    def buildUpCheckoutFailView(self, mess):
+        title = 'Check Out Error'
+        QtGui.QMessageBox.warning(self, title, mess)
