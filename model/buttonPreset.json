@@ -1,12 +1,20 @@
 {
-  "typeFuncInfo": {
-    "Maya Look File": {
-      "Check Out": "print check out",
-      "Compare Diff": "Compare Diff"
-    },
-    "Maya Rig File": {
-      "Check Out": "print check out",
-      "Compare Diff": "Compare Diff"
-    }
-  }
+	"checkOut": {
+		"desc": "Check out version file and replace current unversion file",
+		"module": "from func.basis import checkOut",
+		"func": "checkOutFile",
+		"condition": []
+	},
+	"compareDiff": {
+		"desc": "Show diff between the 2 files",
+		"module": "from func.basis import compareDiff",
+		"func": "compareDiff",
+		"condition": []
+	},
+	"openFileAs": {
+		"desc": "Copy the selected file to your workspace and open it",
+		"module": "from func.maya import openFileAs",
+		"func": "openFileAs",
+		"condition": ["mayaInit"]
+	}
 }
