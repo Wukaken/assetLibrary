@@ -68,3 +68,7 @@ class MainControl(basisControl.BasisControl):
         updateInfo = {'detailVersionInfo': detailVersionInfo,
                       'detailInnerDir': innerDir}
         self.setData(updateInfo)
+
+    def checkInFile(self):
+        
+        return

@@ -23,6 +23,8 @@ class BasisView(QtGui.QWidget):
         self.connectFunc()
         self.initContent()
 
+        self.connectSignal()
+
     def initCtrl(self, dataCtrl):
         self.dataCtrl = dataCtrl
 

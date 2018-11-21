@@ -1,3 +1,4 @@
+import os
 try:
     from PySide2 import QtGui
     from PySide2 import QtCore
@@ -101,6 +102,8 @@ class ContentView(basisView.BasisView):
         btnC.do(btnV, btnM)
         btnV.do(btnC)
         btnV.checkOutFileSignal.connect(self.checkOutAction)
+        btnV.compareDiffVersionsSignal.connect(self.compareDiffVersionsAction)
+        btnV.compareMainFileSignal.connect(self.compareDiffMainFileAction)
         return btnV
 
     def buildUpContItemView(self, info, item, listWid):
@@ -190,3 +193,37 @@ class ContentView(basisView.BasisView):
     def buildUpCheckoutFailView(self, mess):
         title = 'Check Out Error'
         QtGui.QMessageBox.warning(self, title, mess)
+
+    def compareDiffVersionsAction(self):
+        versionSelIds = self.dataCtrl.getDataVal('versionSelIds')
+        if not len(versionSelIds) == 2:
+            title = 'Compare Different With Two Version'
+            mess = 'Must Select Two Version Files And Then Compare'
+            QtGui.QMessageBox.warning(self, title, mess)
+        else:
+            detailVersionInfo = self.dataCtrl.getDataVal('detailVersionInfo')
+            files = detailVersionInfo.keys()
+            files.sort(reverse=1)
+            aId = versionSelIds[0]
+            bId = versionSelIds[1]
+            aFile = files[aId]
+            bFile = files[bId]
+            self.dataCtrl.compareDiffVersions(aFile, bFile)
+
+    def compareDiffMainFileAction(self):
+        versionSelIds = self.dataCtrl.getDataVal('versionSelIds')
+        if not versionSelIds:
+            title = 'Compare Different With Main File'
+            mess = 'Must Select One Version Files And Then Compare'
+            QtGui.QMessageBox.warning(self, title, mess)
+        else:
+            detailVersionInfo = self.dataCtrl.getDataVal('detailVersionInfo')
+            files = detailVersionInfo.keys()
+            files.sort(reverse=1)
+
+            currentDir = self.dataCtrl.getDataVal('currentDir')
+            detailFileName = self.dataCtrl.getDataVal('detailFileName')
+            bId = versionSelIds[1]
+            aFile = os.path.join(currentDir, detailFileName)
+            bFile = files[bId]
+            self.dataCtrl.compareDiffMainFile(aFile, bFile)

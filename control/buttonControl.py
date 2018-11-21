@@ -9,8 +9,12 @@ class ButtonControl(basisControl.BasisControl):
     def __init__(self):
         super(ButtonControl, self).__init__()
 
-    def initFunc(self):
-        return
+    def initFuncInfo(self):
+        self.funcInfo = {
+            'checkOutFile': self.checkOutFile,
+            'openFileAs': self.openFileAs,
+            'compareDiff': self.compareDiff
+        }
 
     def checkOutFile(self):
         detailInnerDir = self.getDataVal('detailInnerDir')
@@ -19,12 +23,12 @@ class ButtonControl(basisControl.BasisControl):
         toFileName = re.sub(mat, '.', fileName)
 
         toDir = os.path.dirname(detailInnerDir)
-        oriJson = os.path.join(detailInnerDir, fileName)
+        oriJson = os.path.join(detailInnerDir, fileName).replace('\\', '/')
         oriInfo = {}
         self.dataObj.inputDataFromFile(oriJson, oriInfo)
         oriMetaData = oriInfo['metaData']
 
-        toJson = os.path.join(toDir, toFileName)
+        toJson = os.path.join(toDir, toFileName).replace('\\', '/')
         toInfo = {}
         checkOutTest = 1
         outMess = ''
@@ -37,13 +41,13 @@ class ButtonControl(basisControl.BasisControl):
             toInfo = oriInfo
             mainFileName = oriMetaData['fileName']
             picName = oriMetaData['picFile']
-            mainFile = os.path.join(detailInnerDir, mainFileName)
-            picFile = os.path.join(detailInnerDir, picName)
+            mainFile = os.path.join(detailInnerDir, mainFileName).replace('\\', '/')
+            picFile = os.path.join(detailInnerDir, picName).replace('\\', '/')
 
             toMainFileName = re.sub(mat, '.', mainFileName)
             toPicName = re.sub(mat, '.', picName)
-            toMainFile = os.path.join(toDir, toMainFileName)
-            toPicFile = os.path.join(toDir, toPicName)
+            toMainFile = os.path.join(toDir, toMainFileName).replace('\\', '/')
+            toPicFile = os.path.join(toDir, toPicName).replace('\\', '/')
             
             toInfo['metaData']['fileName'] = toFileName
             toInfo['metaData']['picFile'] = toPicName
@@ -54,3 +58,25 @@ class ButtonControl(basisControl.BasisControl):
             outMess = 'File: %s has been checked out with %s by %s' % (toMainFile, mainFile, getpass.getuser())
 
         self.widget.emitCheckOutSignal(outMess, checkOutTest)
+
+    def openFileAs(self):
+        from func.maya import mayaDataIO
+
+        currentDir = self.getDataVal('currentDir')
+        fileName = self.getDataVal('fileName')
+        oriMa = os.path.join(currentDir, fileName).replace('\\', '/')
+        mayaDataIO.openFileAs(oriMa)
+
+    def compareDiffVersions(self):
+        self.widget.emitCompareDiffVersionSignal()
+
+    def compareWithMainFile(self):
+        self.widget.emitCompareDiffMainFileSignal()
+
+    def compareWithCurrentScene(self):
+        from func.maya import mayaDataCompare
+        
+        currentDir = self.getDataVal('currentDir')
+        fileName = self.getDataVal('fileName')
+        bFile = os.path.join(currentDir, fileName).replace('\\', '/')
+        mayaDataCompare.compareDiffCurrentScene(bFile)

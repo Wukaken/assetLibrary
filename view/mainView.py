@@ -18,11 +18,6 @@ class MainView(QtGui.QDialog, basisView.BasisView):
     def __init__(self, parent=None):
         super(MainView, self).__init__(parent)
 
-    def do(self, dataCtrl):
-        super(MainView, self).do(dataCtrl)
-
-        self.connectSignal()
-
     def buildElements(self):
         super(MainView, self).buildElements()
         

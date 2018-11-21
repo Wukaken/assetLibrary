@@ -6,7 +6,7 @@ except:
     from PySide import QtCore
 
 import basisView
-import buttonView
+import checkInView
 from functools import partial
 
 
@@ -95,10 +95,29 @@ class FuncView(basisView.BasisView):
         self.ftCB.setCurrentIndex(fileTypeId)
 
     def renewFileType(self, ftId):
-        fileType = self.ftCB.itemText(ftId)
+        fileType = str(self.ftCB.itemText(ftId))
         updateInfo = {'fileType': fileType}
         self.dataCtrl.setData(updateInfo)
 
     def checkInFile(self):
+        outputFileName = str(self.fnLE.text())
+        outputFileType = str(self.ftCB.currentText())
+        updateInfo = {'outputFileName': outputFileName,
+                      'outputFileType': outputFileType}
+        self.dataCtrl.setData(updateInfo)
+
+        rec = self.dataCtrl.validOutputCheck()
+        status = rec[0]
+        if status:
+            mess = rec[1]
+            self.buildUpCheckInFailView(self, mess)
+        else:
+            self.buildUpCheckInView()
         
-        return
+    def buildUpCheckInFailView(self, mess):
+        title = 'Check In Error'
+        QtGui.QMessageBox.warning(self, title, mess)
+
+    def buildUpCheckInView(self):
+        ciV = checkInView.CheckInView(self)
+        ciV.do(self.dataCtrl)

@@ -11,6 +11,8 @@ import basisView
 
 class ButtonView(basisView.BasisView):
     checkOutFileSignal = QtCore.Signal(str, int)
+    compareDiffVersionsSignal = QtCore.Signal()
+    compareMainFileSignal = QtCore.Signal()
     
     def __init__(self, parent=None):
         super(ButtonView, self).__init__(parent)
@@ -107,3 +109,10 @@ class ButtonView(basisView.BasisView):
 
     def emitCheckOutSignal(self, outMess, checkOutTest):
         self.checkOutFileSignal.emit(outMess, checkOutTest)
+
+    def emitCompareDiffVersionSignal(self):
+        self.compareDiffVersionsSignal.emit()
+
+    def emitCompareDiffMainFileSignal(self):
+        self.compareMainFileSignal.emit()
+
