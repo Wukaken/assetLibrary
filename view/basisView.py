@@ -52,3 +52,6 @@ class BasisView(QtGui.QWidget):
 
     def initContent(self):
         return
+
+    def connectSignal(self):
+        return

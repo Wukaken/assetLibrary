@@ -1,20 +1,34 @@
 {
-	"checkOut": {
-		"desc": "Check out version file and replace current unversion file",
-		"module": "from func.basis import checkOut",
-		"func": "checkOutFile",
-		"condition": []
-	},
-	"compareDiff": {
-		"desc": "Show diff between the 2 files",
-		"module": "from func.basis import compareDiff",
-		"func": "compareDiff",
-		"condition": []
-	},
-	"openFileAs": {
-		"desc": "Copy the selected file to your workspace and open it",
-		"module": "from func.maya import openFileAs",
-		"func": "openFileAs",
-		"condition": ["mayaInit"]
+	"funcInfo": {
+		"checkOut": {
+			"desc": "Check out version file and replace current unversion file",
+			"func": "checkOutFile",
+			"conditions": ["versionDetail"],
+			"validFileTypes": []
+		},
+		"compareDiffVersion": {
+			"desc": "Show diff between the 2 version files",
+			"func": "compareDiffVersion",
+			"conditions": ["versionDetail"],
+			"validFileTypes": []
+		},
+		"compareDiffMain": {
+			"desc": "Show diff between the 1 version file and 1 main file",
+			"func": "compareDiffMain",
+			"conditions": ["versionDetail"],
+			"validFileTypes": []
+		},
+		"compareDiffCurrentScene": {
+			"desc": "Show diff between the 1 file and current scene",
+			"func": "compareDiffCurrentScene",
+			"conditions": ["mayaInit"],
+			"validFileTypes": []
+		},
+		"openFileAs": {
+			"desc": "Copy the selected file to your workspace and open it",
+			"func": "openFileAs",
+			"conditions": ["mayaInit"],
+			"validFileTypes": []
+		}
 	}
 }

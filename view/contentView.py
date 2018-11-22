@@ -87,6 +87,7 @@ class ContentView(basisView.BasisView):
         files.sort(reverse=reverse)
         for f in files:
             info = fileInfo[f]
+            info['inputJson'] = f
             item = QtGui.QListWidgetItem()
 
             item.setSizeHint(QtCore.QSize(
@@ -108,6 +109,11 @@ class ContentView(basisView.BasisView):
 
     def buildUpContItemView(self, info, item, listWid):
         info['currentDir'] = self.dataCtrl.getDataVal('currentDir')
+        info['versionDetail'] = 0
+
+        generalInfo = self.dataCtrl.getGeneralInfo()
+        info.update(generalInfo)
+        
         btnV = self.buildUpButtonView(info)
         listWid.setItemWidget(item, btnV)
 
@@ -145,6 +151,11 @@ class ContentView(basisView.BasisView):
         info.update(oriBtnM.data)
         info['scaleFractor'] = 1.15
         info['outInfoKeys'] = info['tipsKeys']
+        info['versionDetail'] = 0
+
+        generalInfo = self.dataCtrl.getGeneralInfo()
+        info.update(generalInfo)
+        
         btnV = self.buildUpButtonView(info)
 
         self.detailW = btnV
@@ -164,6 +175,11 @@ class ContentView(basisView.BasisView):
     def buildUpVersionItemView(self, info, item, listWid):
         info['currentDir'] = self.dataCtrl.getDataVal('detailInnerDir')
         info['outInfoKeys'] = ['fileName', 'version']
+        info['versionDetail'] = 1
+
+        generalInfo = self.dataCtrl.getGeneralInfo()
+        info.update(generalInfo)
+        
         btnV = self.buildUpButtonView(info)
         listWid.setItemWidget(item, btnV)
 
@@ -186,7 +202,7 @@ class ContentView(basisView.BasisView):
 
     def checkOutAction(self, mess, checkOutTest):
         if not checkOutTest:
-            self.buildUpCheckoutFailView()
+            self.buildUpCheckoutFailView(mess)
         else:
             self.dataCtrl.triggerCheckoutMail(mess)
 

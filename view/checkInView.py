@@ -6,6 +6,7 @@ except:
     from PySide import QtCore
 
 import cmpView
+import basisView
 from functools import partial
 
 

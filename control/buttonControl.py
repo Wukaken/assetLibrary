@@ -8,50 +8,63 @@ import basisControl
 class ButtonControl(basisControl.BasisControl):
     def __init__(self):
         super(ButtonControl, self).__init__()
+        self.initFuncInfo()
 
     def initFuncInfo(self):
         self.funcInfo = {
             'checkOutFile': self.checkOutFile,
             'openFileAs': self.openFileAs,
-            'compareDiff': self.compareDiff
+            'compareDiffVersion': self.compareWithVersions,
+            'compareDiffMain': self.compareWithMainFile,
+            'compareDiffCurrentScene': self.compareWithCurrentScene
         }
 
-    def checkOutFile(self):
-        detailInnerDir = self.getDataVal('detailInnerDir')
-        fileName = self.getDataVal('fileName')
-        mat = '.v[\d]{3}.'
-        toFileName = re.sub(mat, '.', fileName)
+    def getFunc(self, funcName):
+        return self.funcInfo.get(funcName)
 
-        toDir = os.path.dirname(detailInnerDir)
-        oriJson = os.path.join(detailInnerDir, fileName).replace('\\', '/')
+    def checkOutFile(self):
+        oriJson = self.getDataVal('inputJson')
+        
+        currentDir = self.getDataVal('currentDir')
+        metaData = self.getDataVal('metaData')
+        fileName = metaData['fileName']
+        jsonName = os.path.basename(oriJson)
+        mat = '.v[\d]{3}.'
+        toJsonName = re.sub(mat, '.', jsonName)
+
+        toDir = os.path.dirname(currentDir)
         oriInfo = {}
         self.dataObj.inputDataFromFile(oriJson, oriInfo)
         oriMetaData = oriInfo['metaData']
 
-        toJson = os.path.join(toDir, toFileName).replace('\\', '/')
+        toJson = os.path.join(toDir, toJsonName).replace('\\', '/')
         toInfo = {}
+        self.dataObj.inputDataFromFile(toJson, toInfo)
+        toMetaData = toInfo['metaData']
+        
         checkOutTest = 1
         outMess = ''
-        self.dataObj.inputDataFromFile(toJson, toInfo)
-        toMetaData = oriMetaData
         if oriMetaData['version'] == toMetaData['version']:
             checkOutTest = 0
             outMess = 'File: %s Check Same Version Out, do nothing' % fileName
         else:
+            toMetaData = oriMetaData
+
             toInfo = oriInfo
             mainFileName = oriMetaData['fileName']
             picName = oriMetaData['picFile']
-            mainFile = os.path.join(detailInnerDir, mainFileName).replace('\\', '/')
-            picFile = os.path.join(detailInnerDir, picName).replace('\\', '/')
+            mainFile = os.path.join(currentDir, mainFileName).replace('\\', '/')
+            picFile = os.path.join(currentDir, picName).replace('\\', '/')
 
             toMainFileName = re.sub(mat, '.', mainFileName)
             toPicName = re.sub(mat, '.', picName)
             toMainFile = os.path.join(toDir, toMainFileName).replace('\\', '/')
             toPicFile = os.path.join(toDir, toPicName).replace('\\', '/')
             
-            toInfo['metaData']['fileName'] = toFileName
+            toInfo['metaData']['fileName'] = toMainFileName
             toInfo['metaData']['picFile'] = toPicName
             self.dataObj.outputDataToFile(toJson, toInfo)
+
             shutil.copy(mainFile, toMainFile)
             shutil.copy(picFile, toPicFile)
 
@@ -67,7 +80,7 @@ class ButtonControl(basisControl.BasisControl):
         oriMa = os.path.join(currentDir, fileName).replace('\\', '/')
         mayaDataIO.openFileAs(oriMa)
 
-    def compareDiffVersions(self):
+    def compareWithVersions(self):
         self.widget.emitCompareDiffVersionSignal()
 
     def compareWithMainFile(self):

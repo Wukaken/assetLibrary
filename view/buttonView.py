@@ -85,11 +85,31 @@ class ButtonView(basisView.BasisView):
         self.initTooltips()
 
     def setupFuncMenu(self):
-        funcKeys = self.dataCtrl.getDataVal('funcKeys', [])
         funcInfo = self.dataCtrl.getDataVal('funcInfo')
-        for funcKey in funcKeys:
-            func = funcInfo.get(funcKey)
-            self.menu.addAction(funcKey, func)
+        allDesc = ''
+        for funcKey, info in funcInfo.items():
+            conditions = info['conditions']
+            appTest = 1
+            for condition in conditions:
+                if not self.dataCtrl.getDataVal(condition):
+                    appTest = 0
+                    break
+
+            if appTest:
+                validTypes = info['validFileTypes']
+                fileType = self.dataCtrl.getDataVal('fileType')
+                if validTypes and fileType not in validTypes:
+                    appTest = 0
+
+            if appTest:
+                funcName = info['func']
+                func = self.dataCtrl.getFunc(funcName)
+                if func:
+                    desc = info['desc']
+                    allDesc += '%s: %s\n' % (funcKey, desc)
+                    self.menu.addAction(funcKey, func)
+
+        self.menu.setToolTip(allDesc)
 
     def initTooltips(self):
         metaData = self.dataCtrl.getDataVal('metaData')

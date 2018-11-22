@@ -7,6 +7,7 @@ class BasisModel(object):
         self.storeKeys = [
             'projectRoot', 'currentDir', 'activeFileTypes',
             'fileTypes', 'fileType', 'mailList']
+        self.generalKeys = ['mayaInit']
         self.data = inData
         self.inJson = inJson
         self.presetJson = presetJson

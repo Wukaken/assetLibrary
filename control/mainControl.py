@@ -69,6 +69,9 @@ class MainControl(basisControl.BasisControl):
                       'detailInnerDir': innerDir}
         self.setData(updateInfo)
 
+    def triggerCheckoutMail(self, mess):
+        return
+
     def checkInFile(self):
         
         return

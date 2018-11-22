@@ -27,3 +27,10 @@ class BasisControl(object):
     def outputPresetDataFile(self):
         if self.dataObj:
             self.dataObj.outPresetFile()
+
+    def getGeneralInfo(self):
+        outInfo = {}
+        if self.dataObj:
+            outInfo = self.dataObj.getSpecDatas(self.dataObj.generalKeys)
+            
+        return outInfo

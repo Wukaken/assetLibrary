@@ -13,15 +13,7 @@ class ButtonModel(basisModel.BasisModel):
         self.storeKeys = []
 
     def normalizeData(self):
-        metaData = self.getDataVal('metaData')
-        fileType = metaData.get('fileType')
-        typeFuncInfo = self.getDataVal('typeFuncInfo')
-        funcInfo = typeFuncInfo.get(fileType, {})
-
-        funcKeys = funcInfo.keys()
-        initData = {'funcInfo': funcInfo,
-                    'funcKeys': funcKeys,
-                    'outInfoKeys': ['fileName', 'fileType'],
+        initData = {'outInfoKeys': ['fileName', 'fileType'],
                     'tipsKeys': ['fileName', 'descStr',
                                  'fileType', 'fileType',
                                  'version'],
