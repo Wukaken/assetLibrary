@@ -86,7 +86,32 @@ class MainControl(basisControl.BasisControl):
         cmpUtil.doCompare(diffInfo)
         return diffInfo
 
-    def checkInFile(self):
-        
-        return
+    def validOutputCheck(self):
+        currentDir = self.getDataVal('currentDir')
+        outputFileName = self.getDataVal('outputFileName', '')
+        outputFileType = self.getDataVal('outputFileType')
+        fileTypes = self.getDataVal('fileTypes')
+        rec = 0
+        outMess = ''
+        if outputFileType not in fileTypes:
+            outMess += 'FileType: %s not in valid fileTypes:\n %s\n' % (
+                outputFileType, ' '.join(fileTypes))
+            rec = 1
+        if not outputFileName:
+            outMess += 'Output File Name is Empty\n'
+            rec = 1
+        if '.' not in outputFileName:
+            outMess += 'Output File Name does not contain a suffix\n'
+            rec = 1
+        if not os.path.isdir(currentDir):
+            outMess += 'Output Dir: %s is not a directary\n'
+            rec = 1
+            
+        out = [rec, outMess]
+        return out
 
+    def doCheckInCompare(self):
+        from func.maya import mayaDataIO
+
+        mayaDataIO.saveMayaFile()
+        mayaDataIO.genDetailFileInfo()

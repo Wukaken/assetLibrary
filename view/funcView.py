@@ -7,7 +7,6 @@ except:
 
 import basisView
 import checkInView
-from functools import partial
 
 
 class FuncView(basisView.BasisView):
@@ -70,10 +69,11 @@ class FuncView(basisView.BasisView):
         mailList = self.dataCtrl.getDataVal('mailList', [])
         mailStr = '\n'.join(mailList)
         self.mailTE.setText(mailStr)
-
+        '''
         mayaInit = self.dataCtrl.getDataVal('mayaInit')
         if not mayaInit:
             self.chkInBtn.setEnabled(0)
+        '''
 
     def renewMailList(self):
         mailStr = self.mailTE.toPlainText()
@@ -89,6 +89,9 @@ class FuncView(basisView.BasisView):
     def autoConfig(self):
         detailFileName = self.dataCtrl.getDataVal('detailFileName')
         detailFileType = self.dataCtrl.getDataVal('detailFileType')
+        if not detailFileName or not detailFileType:
+            return
+        
         fileTypes = self.dataCtrl.getDataVal('fileTypes')
         fileTypeId = fileTypes.index(detailFileType)
         self.fnLE.setText(detailFileName)
@@ -110,8 +113,9 @@ class FuncView(basisView.BasisView):
         status = rec[0]
         if status:
             mess = rec[1]
-            self.buildUpCheckInFailView(self, mess)
+            self.buildUpCheckInFailView(mess)
         else:
+            # diffInfo = self.dataCtrl.doCheckInCompare()
             self.buildUpCheckInView()
         
     def buildUpCheckInFailView(self, mess):
@@ -121,3 +125,7 @@ class FuncView(basisView.BasisView):
     def buildUpCheckInView(self):
         ciV = checkInView.CheckInView(self)
         ciV.do(self.dataCtrl)
+        ciV.setWindowModality(QtCore.Qt.ApplicationModal)
+        ciV.show()
+
+

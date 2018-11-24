@@ -8,7 +8,8 @@ class BasisControl(object):
         self.initData(dataObj)
 
     def initWidget(self, widget):
-        self.widget = widget
+        if not self.widget:
+            self.widget = widget
 
     def initData(self, dataObj):
         self.dataObj = dataObj
@@ -35,7 +36,7 @@ class BasisControl(object):
             
         return outInfo
 
-    def getOutputStr(self, outInfo):
+    def getDataOutputStr(self, outInfo):
         if self.dataObj:
             outStr = self.dataObj.outputDataToStr(outInfo)
 

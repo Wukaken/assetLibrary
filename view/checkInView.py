@@ -7,15 +7,14 @@ except:
 
 import cmpView
 import basisView
-from functools import partial
 
 
-class ChkInView(basisView.BasisView):
+class CheckInView(QtGui.QDialog, basisView.BasisView):
     def __init__(self, parent=None):
-        super(ChkInView, self).__init__(parent)
+        super(CheckInView, self).__init__(parent)
 
     def buildElements(self):
-        super(ChkInView, self).buildElements()
+        super(CheckInView, self).buildElements()
 
         self.diffLabel = QtGui.QLabel('Compare Different:')
         self.cmpView = cmpView.CmpView()
@@ -30,11 +29,13 @@ class ChkInView(basisView.BasisView):
         self.publishBtn = QtGui.QPushButton('Publish')
 
     def buildWidget(self):
-        super(ChkInView, self).buildWidget()
+        super(CheckInView, self).buildWidget()
 
         self.mainLO.addWidget(self.diffLabel, 0, 0, 1, 2, self.centerAlign)
         self.mainLO.addWidget(self.cmpView, 1, 0, 1, 2, self.centerAlign)
         self.mainLO.addWidget(self.nextBtn, 2, 1)
+
+        self.setWindowTitle('Check in Window')
 
     def initContent(self):
         self.cmpView.initContent()

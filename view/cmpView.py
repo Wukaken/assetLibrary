@@ -6,7 +6,6 @@ except:
     from PySide import QtCore
 
 import basisView
-from functools import partial
 
 
 class CmpView(basisView.BasisView):
@@ -20,7 +19,7 @@ class CmpView(basisView.BasisView):
         self.aWid = QtGui.QWidget()
         self.aLabel = QtGui.QLabel()
         self.aTe = QtGui.QTextEdit()
-        self.aLO =QtGui.QGridLayout()
+        self.aLO = QtGui.QGridLayout()
         self.bWid = QtGui.QWidget()
         self.bLabel = QtGui.QLabel()
         self.bTe = QtGui.QTextEdit()
@@ -52,15 +51,14 @@ class CmpView(basisView.BasisView):
         self.frameLO.setRowStretch(0, 0)
         self.frameLO.setRowStretch(1, 1)
 
-    def initContent(self, diffInfo):
+    def initContent(self):
         self.titleLabel.setText('Compare View')
-        self.initCmpContent(diffInfo)
 
     def initCmpContent(self, diffInfo):
         aInfo = diffInfo['aFileInfo']
         bInfo = diffInfo['bFileInfo']
-        aStr = self.dataCtrl.getOutputStr(aInfo)
-        bStr = self.dataCtrl.getOutputStr(bInfo)
+        aStr = self.dataCtrl.getDataOutputStr(aInfo)
+        bStr = self.dataCtrl.getDataOutputStr(bInfo)
         aFile = aInfo['fileName']
         bFile = bInfo['fileName']
         self.aLabel.setText(aFile)

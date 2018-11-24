@@ -67,6 +67,13 @@ class ContentView(basisView.BasisView):
                                 reverse=0)
         self.clearDetailWidget()
         self.clearHistoryWidget()
+        self.initEmptyDetailWidget()
+
+    def initEmptyDetailWidget(self):
+        self.detailW = QtGui.QWidget()
+        self.detailW.setFixedWidth(200)
+        self.detailW.setFixedHeight(200)
+        self.frameLO.addWidget(self.detailW, 2, 1)
 
     def clearContentWidget(self):
         self.contLW.clear()
