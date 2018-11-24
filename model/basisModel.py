@@ -75,6 +75,10 @@ class BasisModel(object):
 
         inData.update(curData)
 
+    def outputDataToStr(self, outData):
+        outStr = json.dump(outData, sort_keys=1, indent=2)
+        return outStr
+
     def outputDataToFile(self, outJson, outData):
         wId = open(outJson, 'wb')
         json.dump(outData, wId, sort_keys=1, indent=2)

@@ -34,3 +34,9 @@ class BasisControl(object):
             outInfo = self.dataObj.getSpecDatas(self.dataObj.generalKeys)
             
         return outInfo
+
+    def getOutputStr(self, outInfo):
+        if self.dataObj:
+            outStr = self.dataObj.outputDataToStr(outInfo)
+
+        return outStr

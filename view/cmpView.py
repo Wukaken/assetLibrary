@@ -52,8 +52,20 @@ class CmpView(basisView.BasisView):
         self.frameLO.setRowStretch(0, 0)
         self.frameLO.setRowStretch(1, 1)
 
-    def initContent(self):
+    def initContent(self, diffInfo):
         self.titleLabel.setText('Compare View')
-        self.aLabel.setText('asdf')
-        self.bLabel.setText('basdf')
-        
+        self.initCmpContent(diffInfo)
+
+    def initCmpContent(self, diffInfo):
+        aInfo = diffInfo['aFileInfo']
+        bInfo = diffInfo['bFileInfo']
+        aStr = self.dataCtrl.getOutputStr(aInfo)
+        bStr = self.dataCtrl.getOutputStr(bInfo)
+        aFile = aInfo['fileName']
+        bFile = bInfo['fileName']
+        self.aLabel.setText(aFile)
+        self.bLabel.setText(bFile)
+        self.aTe.clear()
+        self.bTe.clear()
+        self.aTe.append(aStr)
+        self.bTe.append(bStr)
