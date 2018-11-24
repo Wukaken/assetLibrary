@@ -2,6 +2,7 @@ import os
 import re
 import basisControl
 from func.mail import mailUtil
+from func.basis import compareUtil
 
 
 class MainControl(basisControl.BasisControl):
@@ -75,6 +76,17 @@ class MainControl(basisControl.BasisControl):
         m = mailUtil.MailUtils()
         m.sendMail(mailList, mailInfo)
 
+    def compareDiffFiles(self, aJson, bJson):
+        aInfo = {}
+        self.dataObj.inputDataFromFile(aJson, aInfo)
+        bInfo = {}
+        self.dataObj.inputDataFromFile(bJson, bInfo)
+        cmpUtil = compareUtil.CompareUtil(aInfo, bInfo)
+        diffInfo = {}
+        cmpUtil.doCompare(diffInfo)
+        return diffInfo
+
     def checkInFile(self):
         
         return
+

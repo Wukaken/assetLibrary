@@ -3,6 +3,7 @@ import getpass
 import os
 import shutil
 import basisControl
+from func.basis import compareUtil
 
 
 class ButtonControl(basisControl.BasisControl):
@@ -91,9 +92,15 @@ class ButtonControl(basisControl.BasisControl):
         self.widget.emitCompareDiffMainFileSignal()
 
     def compareWithCurrentScene(self):
-        from func.maya import mayaDataCompare
+        from func.maya import mayaDataUtil
         
-        currentDir = self.getDataVal('currentDir')
-        fileName = self.getDataVal('fileName')
-        bFile = os.path.join(currentDir, fileName).replace('\\', '/')
-        mayaDataCompare.compareDiffCurrentScene(bFile)
+        bJson = self.getDataVal('inputJson')
+        bInfo = {}
+        self.dataObj.inputDataFromFile(bJson, bJson)
+        detailInfo = mayaDataUtil.genFileDetailInfo()
+
+        cmpUtil = compareUtil.CompareUtil(detailInfo, bInfo)
+        diffInfo = {}
+        cmpUtil.doCompare(diffInfo)
+        self.widget.emitCompareDiffCurrentFileSignal(diffInfo)
+        return diffInfo

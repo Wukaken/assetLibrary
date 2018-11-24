@@ -1,4 +1,3 @@
-import os
 try:
     from PySide2 import QtGui
     from PySide2 import QtCore
@@ -13,7 +12,7 @@ from model import buttonModel
 
 
 class ContentView(basisView.BasisView):
-    updateCmpViewSignal = QtCore.Signal()
+    updateCmpViewSignal = QtCore.Signal(dict)
     
     def __init__(self, parent=None):
         super(ContentView, self).__init__(parent)
@@ -128,13 +127,15 @@ class ContentView(basisView.BasisView):
 
     def renewDetailVersionInfo(self, item):
         oriBtnV = self.contLW.itemWidget(item)
-        oriBtnM = oriBtnV.dataCtrl.dataObj
+        oriBtnC = oriBtnV.dataCtrl
 
-        metaData = oriBtnM.getDataVal('metaData')
+        metaData = oriBtnC.getDataVal('metaData')
         fileName = metaData.get('fileName')
         fileType = metaData.get('fileType')
+        inputJson = oriBtnC.getDataVal('inputJson')
         updateInfo = {'detailFileName': fileName,
                       'detailFileType': fileType,
+                      'detailInputJson': inputJson,
                       'versionSelIds': []}
         self.dataCtrl.setData(updateInfo)
         self.dataCtrl.getDetailVersionInfo()
@@ -204,8 +205,8 @@ class ContentView(basisView.BasisView):
 
     def checkOutAction(self, mess, subject, checkOutTest):
         if checkOutTest:
-            mailInfo = {'mess': mess,
-                        'subject': subject}
+            # mailInfo = {'mess': mess,
+            #             'subject': subject}
             # self.dataCtrl.triggerMail(mailInfo)
             self.refreshContentWidget()
             
@@ -245,7 +246,8 @@ class ContentView(basisView.BasisView):
             bId = versionSelIds[1]
             aFile = files[aId]
             bFile = files[bId]
-            self.dataCtrl.compareDiffVersions(aFile, bFile)
+            diffInfo = self.dataCtrl.compareDiffFiles(aFile, bFile)
+            self.emitCmpViewUpdateInfo(diffInfo)
 
     def compareDiffMainFileAction(self):
         versionSelIds = self.dataCtrl.getDataVal('versionSelIds')
@@ -258,10 +260,12 @@ class ContentView(basisView.BasisView):
             files = detailVersionInfo.keys()
             files.sort(reverse=1)
 
-            currentDir = self.dataCtrl.getDataVal('currentDir')
-            detailFileName = self.dataCtrl.getDataVal('detailFileName')
+            inputJson = self.dataCtrl.getDataVal('detailInputJson')
             bId = versionSelIds[1]
-            aFile = os.path.join(currentDir, detailFileName)
+            aFile = inputJson
             bFile = files[bId]
-            self.dataCtrl.compareDiffMainFile(aFile, bFile)
+            diffInfo = self.dataCtrl.compareDiffFiles(aFile, bFile)
+            self.emitCmpViewUpdateInfo(diffInfo)
 
+    def emitCmpViewUpdateInfo(self, diffInfo):
+        self.updateCmpViewSignal.emit(diffInfo)
