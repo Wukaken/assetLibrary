@@ -37,9 +37,6 @@ class CheckInView(QtGui.QDialog, basisView.BasisView):
 
         self.setWindowTitle('Check in Window')
 
-    def initContent(self):
-        self.cmpView.initContent()
-
     def connectFunc(self):
         self.nextBtn.clicked.connect(self.renewWidget)
         self.screenBtn.clicked.connect(self.takeScreenShot)
@@ -59,8 +56,19 @@ class CheckInView(QtGui.QDialog, basisView.BasisView):
         self.mainLO.addWidget(self.screenBtn, 2, 0)
         self.mainLO.addWidget(self.publishBtn, 2, 1)
 
+    def initCmpContent(self, diffInfo):
+        self.cmpView.initCmpContent(diffInfo)
+
     def takeScreenShot(self):
         return
 
     def publishFile(self):
+        desc = str(self.descTE.text())
+        temPic = self.getDataVal('outputTemPic')
+        updateInfo = {'outputDescStr': desc,
+                      'outputTemPic': temPic}
+        self.dataCtrl.setData(updateInfo)
+                      
+        self.dataCtrl.checkInFile()
         return
+

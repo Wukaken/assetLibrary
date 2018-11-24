@@ -115,17 +115,18 @@ class FuncView(basisView.BasisView):
             mess = rec[1]
             self.buildUpCheckInFailView(mess)
         else:
-            # diffInfo = self.dataCtrl.doCheckInCompare()
-            self.buildUpCheckInView()
+            diffInfo = self.dataCtrl.doCheckInCompare()
+            self.buildUpCheckInView(diffInfo)
         
     def buildUpCheckInFailView(self, mess):
         title = 'Check In Error'
         QtGui.QMessageBox.warning(self, title, mess)
 
-    def buildUpCheckInView(self):
+    def buildUpCheckInView(self, diffInfo):
         ciV = checkInView.CheckInView(self)
         ciV.do(self.dataCtrl)
         ciV.setWindowModality(QtCore.Qt.ApplicationModal)
         ciV.show()
 
-
+        ciV.
+        

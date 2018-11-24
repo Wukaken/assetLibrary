@@ -1,5 +1,6 @@
 import os
 import re
+import shutil
 import basisControl
 from func.mail import mailUtil
 from func.basis import compareUtil
@@ -113,5 +114,99 @@ class MainControl(basisControl.BasisControl):
     def doCheckInCompare(self):
         from func.maya import mayaDataIO
 
-        mayaDataIO.saveMayaFile()
-        mayaDataIO.genDetailFileInfo()
+        outputFileType = self.getDataVal('outputFileType')
+        outFile = mayaDataIO.saveMayaFile()
+        detailInfo = mayaDataIO.genDetailFileInfo(outputFileType)
+        updateInfo = {'outputTemFile': outFile,
+                      'detailInfo': detailInfo}
+        self.setData(updateInfo)
+
+        aInfo = {'metaData': {'fileName': 'currentFile'},
+                 'detailInfo': detailInfo}
+        validContentFiles = self.getDataVal('validContentFiles', {})
+        outputFileName = self.getDataVal('outputFileName', '')
+        bInfo = {}
+        for validFile in validContentFiles:
+            info = {}
+            self.dataObj.inputDataFromFile(validFile, info)
+            metaData = info.get('metaData')
+            if metaData:
+                fileName = metaData.get('fileName')
+                if fileName == outputFileName:
+                    bInfo = info
+                    break
+        
+        cmpUtil = compareUtil.CompareUtil(aInfo, bInfo)
+        diffInfo = {}
+        cmpUtil.doCompare(diffInfo)
+        return diffInfo
+
+    def checkInFile(self):
+        self.resetDetailFileInfo()
+        ver = self.getLatestVersion()
+        self.outputFile(ver, 1)
+        self.outputFile(ver, 0)
+        self.refreshUI()
+
+    def resetDetailFileInfo(self):
+        outputFileType = self.getDataVal('outputFileType')
+        outputFileName = self.getDataVal('outputFileName')
+        updateInfo = {'detailFileName': outputFileName,
+                      'detailFileType': outputFileType}
+        self.setData(updateInfo)
+        self.getDetailVersionInfo()
+
+    def getLatestVersion(self):
+        detailVersionInfo = self.getDataVal('detailVersionInfo')
+        verFiles = detailVersionInfo.keys()
+        verFiles.sort()
+        latestFile = verFiles[-1]
+
+        verInfo = detailVersionInfo[latestFile]
+        verMax = verInfo['metaData']['version']
+        verMax += 1
+        ver = 'v%03d' % verMax
+        return ver
+
+    def outputFile(self, ver, mainOutput):
+        temFile = self.getDataVal('outputTemFile')
+        temPic = self.getDataVal('outputTemPic')
+        detailInfo = self.getDataVal('detailInfo')
+        outputFileName = self.getDataVal('outputFileName')
+        fileParts = os.path.splitext(outputFileName)
+        picParts = os.path.splitext(temPic)
+        
+        currentDir = ''
+        verStr = ''
+        if mainOutput:
+            currentDir = self.getDataVal('currentDir')
+            verStr = ''
+        else:
+            currentDir = self.getDataVal('detailInnerDir')
+            verStr = '.v%03d' % ver
+
+        outMainName = '%s%s.%s' % (fileParts[0], verStr, fileParts[1])
+        outJsonName = '%s%s.json' % (fileParts[0], verStr)
+        outPicName = '%s%s.%s' % (fileParts[0], verStr, picParts[1])
+
+        outputFileType = self.getDataVal('outputFileType')
+        outInfo = {
+            'metaData': {
+                'descStr': self.getDataVal('outputDescStr', ''),
+                'fileName': outMainName,
+                'fileType': outputFileType,
+                'metaKey': 'assetLibrary',
+                'picFile': outPicName,
+                'version': ver
+            },
+            'detailData': detailInfo}
+        
+        outJson = os.path.join(currentDir, outJsonName).replace('\\', '/')
+        self.outputDataToFile(outJson, outInfo)
+        outPic = os.path.join(currentDir, outPicName).replace('\\', '/')
+        shutil.copy(temPic, outPic)
+        outMain = os.path.join(currentDir, outMainName).replace('\\', '/')
+        self.outputMainFile(temFile, outMain, outputFileType)
+
+    def outputMainFile(temFile, outFile, outputFileType):
+        shutil.copy(temFile, outFile)
