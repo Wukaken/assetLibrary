@@ -1,6 +1,7 @@
 import os
 import re
 import basisControl
+from func.mail import mailUtil
 
 
 class MainControl(basisControl.BasisControl):
@@ -69,8 +70,10 @@ class MainControl(basisControl.BasisControl):
                       'detailInnerDir': innerDir}
         self.setData(updateInfo)
 
-    def triggerCheckoutMail(self, mess):
-        return
+    def triggerMail(self, mailInfo):
+        mailList = self.getDataVal('mailList')
+        m = mailUtil.MailUtils()
+        m.sendMail(mailList, mailInfo)
 
     def checkInFile(self):
         

@@ -10,7 +10,7 @@ import basisView
 
 
 class ButtonView(basisView.BasisView):
-    checkOutFileSignal = QtCore.Signal(str, int)
+    checkOutFileSignal = QtCore.Signal(str, str, int)
     compareDiffVersionsSignal = QtCore.Signal()
     compareMainFileSignal = QtCore.Signal()
     
@@ -127,8 +127,8 @@ class ButtonView(basisView.BasisView):
             
         self.picLabel.setToolTip(allMess)
 
-    def emitCheckOutSignal(self, outMess, checkOutTest):
-        self.checkOutFileSignal.emit(outMess, checkOutTest)
+    def emitCheckOutSignal(self, mess, subject, checkOutTest):
+        self.checkOutFileSignal.emit(mess, subject, checkOutTest)
 
     def emitCompareDiffVersionSignal(self):
         self.compareDiffVersionsSignal.emit()

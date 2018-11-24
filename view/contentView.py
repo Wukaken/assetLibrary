@@ -66,6 +66,8 @@ class ContentView(basisView.BasisView):
         self.renewContentWidget(self.contLW, 'contentFileInfo',
                                 self.buildUpContItemView,
                                 reverse=0)
+        self.clearDetailWidget()
+        self.clearHistoryWidget()
 
     def clearContentWidget(self):
         self.contLW.clear()
@@ -200,16 +202,35 @@ class ContentView(basisView.BasisView):
         self.dataCtrl.setData(updateInfo)
         self.versionLW.itemClicked.connect(self.renewVersionSelection)
 
-    def checkOutAction(self, mess, checkOutTest):
-        if not checkOutTest:
-            self.buildUpCheckoutFailView(mess)
-        else:
-            self.dataCtrl.triggerCheckoutMail(mess)
+    def checkOutAction(self, mess, subject, checkOutTest):
+        if checkOutTest:
+            mailInfo = {'mess': mess,
+                        'subject': subject}
+            # self.dataCtrl.triggerMail(mailInfo)
+            self.refreshContentWidget()
+            
+        self.buildUpNotificationView(mess, subject)
 
-    def buildUpCheckoutFailView(self, mess):
-        title = 'Check Out Error'
-        QtGui.QMessageBox.warning(self, title, mess)
+    def buildUpNotificationView(self, mess, subject):
+        QtGui.QMessageBox.warning(self, subject, mess)
+        
+    def refreshContentWidget(self):
+        detailFileName = self.dataCtrl.getDataVal('detailFileName')
+        self.dataCtrl.genDirValidContentInfo()
+        self.initContent()
+        self.reselectCurrentItem(detailFileName)
 
+    def reselectCurrentItem(self, oriFileName):
+        itemNum = self.contLW.count()
+        for i in range(itemNum):
+            item = self.contLW.item(i)
+            wid = self.contLW.itemWidget(item)
+            metaData = wid.dataCtrl.getDataVal('metaData')
+            fileName = metaData['fileName']
+            if fileName == oriFileName:
+                self.showItemDetails(item)
+                break
+        
     def compareDiffVersionsAction(self):
         versionSelIds = self.dataCtrl.getDataVal('versionSelIds')
         if not len(versionSelIds) == 2:
@@ -243,3 +264,4 @@ class ContentView(basisView.BasisView):
             aFile = os.path.join(currentDir, detailFileName)
             bFile = files[bId]
             self.dataCtrl.compareDiffMainFile(aFile, bFile)
+

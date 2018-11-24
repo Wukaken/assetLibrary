@@ -44,9 +44,11 @@ class ButtonControl(basisControl.BasisControl):
         
         checkOutTest = 1
         outMess = ''
+        subject = ''
         if oriMetaData['version'] == toMetaData['version']:
             checkOutTest = 0
             outMess = 'File: %s Check Same Version Out, do nothing' % fileName
+            subject = 'File: %s Checkout Failed' % fileName
         else:
             toMetaData = oriMetaData
 
@@ -69,8 +71,10 @@ class ButtonControl(basisControl.BasisControl):
             shutil.copy(picFile, toPicFile)
 
             outMess = 'File: %s has been checked out with %s by %s' % (toMainFile, mainFile, getpass.getuser())
+            subject = 'Asset: %s Checkout Success' % mainFileName
 
-        self.widget.emitCheckOutSignal(outMess, checkOutTest)
+        self.widget.emitCheckOutSignal(
+            outMess, subject, checkOutTest)
 
     def openFileAs(self):
         from func.maya import mayaDataIO
