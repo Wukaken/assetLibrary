@@ -1,9 +1,5 @@
-try:
-    from PySide2 import QtGui
-    from PySide2 import QtCore
-except:
-    from PySide import QtGui
-    from PySide import QtCore
+from alQt import QtGui
+from alQt import QtCore
 
 import basisView
 import checkInView
@@ -71,11 +67,10 @@ class FuncView(basisView.BasisView):
         mailList = self.dataCtrl.getDataVal('mailList', [])
         mailStr = '\n'.join(mailList)
         self.mailTE.setText(mailStr)
-        '''
+
         mayaInit = self.dataCtrl.getDataVal('mayaInit')
         if not mayaInit:
             self.chkInBtn.setEnabled(0)
-        '''
 
     def renewMailList(self):
         mailStr = self.mailTE.toPlainText()

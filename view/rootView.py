@@ -1,10 +1,5 @@
-import os
-try:
-    from PySide2 import QtGui
-    from PySide2 import QtCore
-except:
-    from PySide import QtGui
-    from PySide import QtCore
+from alQt import QtGui
+from alQt import QtCore
     
 from . import basisView
 

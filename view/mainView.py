@@ -1,17 +1,13 @@
-try:
-    from PySide2 import QtGui
-    from PySide2 import QtCore
-except:
-    from PySide import QtGui
-    from PySide import QtCore
+from alQt import QtGui
+from alQt import QtCore
 
-from . import basisView
-from . import cmpView
-from . import contentView
-from . import dirView
-from . import funcView
-from . import rootView
-from . import typeView
+import basisView
+import cmpView
+import contentView
+import dirView
+import funcView
+import rootView
+import typeView
 
 
 class MainView(QtGui.QDialog, basisView.BasisView):

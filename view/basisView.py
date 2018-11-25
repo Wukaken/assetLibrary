@@ -1,10 +1,7 @@
-try:
-    from PySide2 import QtGui
-    from PySide2 import QtCore
-except:
-    from PySide import QtGui
-    from PySide import QtCore
+from alQt import QtGui
+from alQt import QtCore
 
+    
 class BasisView(QtGui.QWidget):
     def __init__(self, parent=None):
         super(BasisView, self).__init__(parent)

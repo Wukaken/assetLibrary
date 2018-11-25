@@ -56,6 +56,13 @@ class Main(object):
         return self.dataObj
 
 
+def buildAssetLibInMaya():
+    from maya import OpenMayaUI as omui
+    ptr = omui.MQtUtil.mainWindow()
+    m = Main('', {}, parent=ptr)
+    m.do()
+    
+
 if __name__ == '__main__':
     try:
         from PySide2 import QtGui
