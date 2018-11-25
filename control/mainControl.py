@@ -114,7 +114,6 @@ class MainControl(basisControl.BasisControl):
 
     def doCheckInCompare(self):
         outputTemFile = self.getDataVal('outputTemFile')
-        outputFileType = self.getDataVal('outputFileType')
         detailInfo = self.outputCurrentFileDetailInfo()
         updateInfo = {'outputTemFile': outputTemFile,
                       'outputDetailInfo': detailInfo}
@@ -135,9 +134,9 @@ class MainControl(basisControl.BasisControl):
                     bInfo = info
                     break
         
-        # cmpUtil = compareUtil.CompareUtil(aInfo, bInfo)
+        cmpUtil = compareUtil.CompareUtil(aInfo, bInfo)
         diffInfo = {}
-        # cmpUtil.doCompare(diffInfo)
+        cmpUtil.doCompare(diffInfo)
         return diffInfo
 
     def checkInFile(self):
