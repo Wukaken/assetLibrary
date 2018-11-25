@@ -11,8 +11,7 @@ class DetailInfoUtil(basisModel.BasisModel):
             detailPresetJson = os.path.join(curDir, 'detailPreset.json').replace('\\', '/')
 
         self.detailPresetInfo = {}
-        m = basisModel.BasisModel()
-        m.inputDataFromFile(detailPresetJson, self.detailPresetInfo)
+        self.inputDataFromFile(detailPresetJson, self.detailPresetInfo)
         self.funcInfo = {}
         self.initFuncInfo()
 
@@ -46,7 +45,7 @@ class DetailInfoUtil(basisModel.BasisModel):
                         break
 
                 if appTest:
-                    outName = curFuncInfo[funcName]
+                    outName = curFuncInfo['outName']
                     func = curFuncInfo['func']
                     curDetailInfo = func()
                     detailInfo[outName] = curDetailInfo
@@ -54,7 +53,8 @@ class DetailInfoUtil(basisModel.BasisModel):
         return detailInfo
 
     def getFileTypeDetailFuncs(self):
-        funcNames = self.detailPresetInfo.get(self.fileType, [])
+        fileType = self.getDataVal('outputFileType')
+        funcNames = self.detailPresetInfo.get(fileType, [])
         return funcNames
 
     def outputMeshNameInfo(self):

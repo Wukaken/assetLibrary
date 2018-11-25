@@ -113,14 +113,10 @@ class MainControl(basisControl.BasisControl):
         return out
 
     def doCheckInCompare(self):
-        # from func.maya import mayaDataIO
-
+        outputTemFile = self.getDataVal('outputTemFile')
         outputFileType = self.getDataVal('outputFileType')
-        # outFile = mayaDataIO.saveMayaFile()
-        outFile = '/Users/wujiajian/Desktop/supplement.m'
-        detailInfo = {'face': 'test'}
-        # detailInfo = mayaDataIO.genDetailFileInfo(outputFileType)
-        updateInfo = {'outputTemFile': outFile,
+        detailInfo = self.outputCurrentFileDetailInfo()
+        updateInfo = {'outputTemFile': outputTemFile,
                       'outputDetailInfo': detailInfo}
         self.setData(updateInfo)
 
@@ -243,7 +239,9 @@ class MainControl(basisControl.BasisControl):
         return outFile
 
     def outputCurrentFileDetailInfo(self):
-        outputFileType = self.getDataVal('outputFileType')
-        detailOutObj = detailInfoUtil.DetailInfoUtil(outputFileType)
+        info = {'outputFileType': self.getDataVal('outputFileType'),
+                'mayaInit': self.getDataVal('mayaInit')}
+        
+        detailOutObj = detailInfoUtil.DetailInfoUtil(info)
         detailInfo = detailOutObj.do()
         return detailInfo

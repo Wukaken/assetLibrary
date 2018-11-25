@@ -1,0 +1,8 @@
+{
+	"Maya Model File": ["outputMeshNameInfo",
+						"outputMeshTopoInfo"],
+	"Maya Look File": ["outputMeshNameInfo",
+					   "outputMeshTopoInfo",
+					   "outputShaderConInfo"],
+	"Maya Rig File": ["outputCtrlNameInfo"]
+}						

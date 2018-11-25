@@ -11,6 +11,8 @@ import typeView
 
 
 class MainView(QtGui.QDialog, basisView.BasisView):
+    name = 'AssetLibraryWindow'
+    
     def __init__(self, parent=None):
         super(MainView, self).__init__(parent)
 

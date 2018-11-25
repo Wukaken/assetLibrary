@@ -49,3 +49,4 @@ def saveMayaFile(mayaFile='', cleanUpUI=1):
         cleanMayaUI()
         
     cmds.file(f=1, save=1, options="v=0", type=fileType, uc=0)
+    return mayaFile

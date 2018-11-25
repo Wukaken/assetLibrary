@@ -8,7 +8,7 @@ def screenShotCurrentPanel(outFile=''):
         outFile = tempfile.mktemp(suffix='.jpg').replace('\\', '/')
 
     curFrame = cmds.currentTime(q=1)
-    outHeader = os.path.splitext(outFile)
+    outHeader = os.path.splitext(outFile)[0]
     outPic = cmds.playblast(
         format='image', filename=outHeader, sequenceTime=0,
         clearCache=1, viewer=0, showOrnaments=1, fp=4,

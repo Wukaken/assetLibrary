@@ -4,10 +4,8 @@ import json
 
 class BasisModel(object):
     def __init__(self, inJson, inData={}, presetJson=None):
-        self.storeKeys = [
-            'projectRoot', 'currentDir', 'activeFileTypes',
-            'fileTypes', 'fileType', 'mailList']
-        self.generalKeys = ['mayaInit']
+        self.storeKeys = []
+        self.generalKeys = []
         self.data = inData
         self.inJson = inJson
         self.presetJson = presetJson
@@ -20,38 +18,7 @@ class BasisModel(object):
         self.normalizeData()
 
     def normalizeData(self):
-        userDir = os.path.expanduser('~')
-        currentDir = self.getDataVal('currentDir', userDir)
-        initData = {
-            'projectRoot': userDir,
-            'currentDir': userDir,
-            'currentDirs': [currentDir],
-            'currentDirId': 0,
-
-            'fileTypes': ['Maya Look File', 'Maya Rig File'],
-            'tipKeys': ['fileName', 'fileType', 'version', 'descStr'],
-            'outInfoKeys': ['fileName', 'descStr'],
-            'buttonWidgetSize': [176, 168],
-            'buttonPicmapSize': [160, 100],
-            'buttonWidgetScaleFractor': 1
-        }
-        self.completeData(initData)
-
-        activeFileTypes = self.getDataVal('activeFileTypes', [])
-        fileTypes = self.getDataVal('fileTypes')
-        if not activeFileTypes:
-            activeFileTypes = fileTypes[:]
-        else:
-            rmIds = []
-            for i, fileType in enumerate(activeFileTypes):
-                if fileType not in fileTypes:
-                    rmIds.insert(0, i)
-
-            for rmId in rmIds:
-                activeFileTypes.pop(rmId)
-
-        updateInfo = {'activeFileTypes': activeFileTypes}
-        self.setDataVal(updateInfo)
+        return
 
     def completeData(self, inData):
         for key, val in inData.items():

@@ -18,14 +18,15 @@ def outputMeshTopoInfo():
         dag = mdag.partialPathName()
         verNum = 0
         faceNum = 0
-        topoId = ''
-        if mdag.partialPathName() in meshes:
-            verNum = mdag.numVertices()
-            faceNum = mdag.numPolygons()
+        topoMess = ''
+        if dag in meshes:
+            fnMesh = om.MFnMesh(mdag)
+            verNum = fnMesh.numVertices()
+            faceNum = fnMesh.numPolygons()
             if verNum and faceNum:
                 ppVerCount = om.MIntArray()
                 ppVerId = om.MIntArray()
-                mdag.getVertices(ppVerCount, ppVerId)
+                fnMesh.getVertices(ppVerCount, ppVerId)
 
                 ppCount = list(ppVerCount)
                 ppId = list(ppVerId)
@@ -45,5 +46,6 @@ def outputMeshTopoInfo():
         topoInfo[dag] = {'verNum': verNum,
                          'faceNum': faceNum,
                          'topoId': topoId}
+        it.next()
 
     return topoId

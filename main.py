@@ -1,5 +1,5 @@
 import os
-from model import basisModel
+from model import mainModel
 from control import mainControl
 
 
@@ -24,7 +24,7 @@ class Main(object):
             self.wid = mainView.MainView(self.parent)
 
         self.ctrl = mainControl.MainControl()
-        self.dataObj = basisModel.BasisModel(
+        self.dataObj = mainModel.MainModel(
             self.inJson, inData=self.inDict, presetJson=self.presetJson)
         self.ctrl.do(self.wid, self.dataObj)
 
@@ -58,17 +58,29 @@ class Main(object):
 
 def buildAssetLibInMaya():
     from maya import OpenMayaUI as omui
+    from alQt import QtGui
     ptr = omui.MQtUtil.mainWindow()
-    m = Main('', {}, parent=ptr)
+    try:
+        from shiboken import wrapInstance
+    except:
+        from shiboken2 import wrapInstance
+
+    name = 'AssetLibraryWindow'
+    ptr = omui.MQtUtil.findControl(name)
+    if ptr:
+        wid = wrapInstance(long(ptr), QtGui.QWidget)
+        if not wid.isHidden():
+            wid.close()
+
+    mainPtr = omui.MQtUtil.mainWindow()
+    parent = wrapInstance(long(mainPtr), QtGui.QWidget)
+    m = Main('', {}, parent=parent)
     m.do()
-    
+
 
 if __name__ == '__main__':
-    try:
-        from PySide2 import QtGui
-    except:
-        from PySide import QtGui
     import sys
+    from alQt import QtGui
     
     app = QtGui.QApplication(sys.argv)
     m = Main('', {})
