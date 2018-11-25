@@ -10,6 +10,8 @@ import checkInView
 
 
 class FuncView(basisView.BasisView):
+    updateContViewSignal = QtCore.Signal()
+    
     def __init__(self, parent=None):
         super(FuncView, self).__init__(parent)
 
@@ -126,7 +128,9 @@ class FuncView(basisView.BasisView):
         ciV = checkInView.CheckInView(self)
         ciV.do(self.dataCtrl)
         ciV.setWindowModality(QtCore.Qt.ApplicationModal)
+
+        ciV.updateContViewSignal.connect(self.emitUpdateContentViewSignal)
         ciV.show()
 
-        ciV.
-        
+    def emitUpdateContentViewSignal(self):
+        self.updateContViewSignal.emit()

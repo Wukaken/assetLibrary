@@ -112,11 +112,13 @@ class MainControl(basisControl.BasisControl):
         return out
 
     def doCheckInCompare(self):
-        from func.maya import mayaDataIO
+        # from func.maya import mayaDataIO
 
         outputFileType = self.getDataVal('outputFileType')
-        outFile = mayaDataIO.saveMayaFile()
-        detailInfo = mayaDataIO.genDetailFileInfo(outputFileType)
+        # outFile = mayaDataIO.saveMayaFile()
+        outFile = '/Users/wujiajian/Desktop/supplement.m'
+        detailInfo = {'face': 'test'}
+        # detailInfo = mayaDataIO.genDetailFileInfo(outputFileType)
         updateInfo = {'outputTemFile': outFile,
                       'detailInfo': detailInfo}
         self.setData(updateInfo)
@@ -136,9 +138,9 @@ class MainControl(basisControl.BasisControl):
                     bInfo = info
                     break
         
-        cmpUtil = compareUtil.CompareUtil(aInfo, bInfo)
+        # cmpUtil = compareUtil.CompareUtil(aInfo, bInfo)
         diffInfo = {}
-        cmpUtil.doCompare(diffInfo)
+        # cmpUtil.doCompare(diffInfo)
         return diffInfo
 
     def checkInFile(self):
@@ -146,7 +148,7 @@ class MainControl(basisControl.BasisControl):
         ver = self.getLatestVersion()
         self.outputFile(ver, 1)
         self.outputFile(ver, 0)
-        self.refreshUI()
+        self.getDetailVersionInfo()
 
     def resetDetailFileInfo(self):
         outputFileType = self.getDataVal('outputFileType')
@@ -157,13 +159,17 @@ class MainControl(basisControl.BasisControl):
         self.getDetailVersionInfo()
 
     def getLatestVersion(self):
-        detailVersionInfo = self.getDataVal('detailVersionInfo')
-        verFiles = detailVersionInfo.keys()
-        verFiles.sort()
-        latestFile = verFiles[-1]
+        detailVersionInfo = self.getDataVal('detailVersionInfo', {})
+        verMax = 0
+        if detailVersionInfo:
+            verFiles = detailVersionInfo.keys()
+            verFiles.sort()
+            latestFile = verFiles[-1]
 
-        verInfo = detailVersionInfo[latestFile]
-        verMax = verInfo['metaData']['version']
+            verInfo = detailVersionInfo[latestFile]
+            curVer = verInfo['metaData']['version']
+            verMax = int(curVer[1:])
+            
         verMax += 1
         ver = 'v%03d' % verMax
         return ver
@@ -183,11 +189,11 @@ class MainControl(basisControl.BasisControl):
             verStr = ''
         else:
             currentDir = self.getDataVal('detailInnerDir')
-            verStr = '.v%03d' % ver
+            verStr = '.%s' % ver
 
-        outMainName = '%s%s.%s' % (fileParts[0], verStr, fileParts[1])
+        outMainName = '%s%s%s' % (fileParts[0], verStr, fileParts[1])
         outJsonName = '%s%s.json' % (fileParts[0], verStr)
-        outPicName = '%s%s.%s' % (fileParts[0], verStr, picParts[1])
+        outPicName = '%s%s%s' % (fileParts[0], verStr, picParts[1])
 
         outputFileType = self.getDataVal('outputFileType')
         outInfo = {
@@ -199,14 +205,15 @@ class MainControl(basisControl.BasisControl):
                 'picFile': outPicName,
                 'version': ver
             },
-            'detailData': detailInfo}
+            'detailData': detailInfo
+        }
         
         outJson = os.path.join(currentDir, outJsonName).replace('\\', '/')
-        self.outputDataToFile(outJson, outInfo)
+        self.dataObj.outputDataToFile(outJson, outInfo)
         outPic = os.path.join(currentDir, outPicName).replace('\\', '/')
         shutil.copy(temPic, outPic)
         outMain = os.path.join(currentDir, outMainName).replace('\\', '/')
         self.outputMainFile(temFile, outMain, outputFileType)
 
-    def outputMainFile(temFile, outFile, outputFileType):
+    def outputMainFile(self, temFile, outFile, outputFileType):
         shutil.copy(temFile, outFile)

@@ -10,6 +10,8 @@ import basisView
 
 
 class CheckInView(QtGui.QDialog, basisView.BasisView):
+    updateContViewSignal = QtCore.Signal()
+    
     def __init__(self, parent=None):
         super(CheckInView, self).__init__(parent)
 
@@ -24,6 +26,7 @@ class CheckInView(QtGui.QDialog, basisView.BasisView):
 
         self.descLabel = QtGui.QLabel('Description:')
         self.picLabel = QtGui.QLabel()
+        self.picmap = QtGui.QPixmap()
         self.descTE = QtGui.QTextEdit()
         self.screenBtn = QtGui.QPushButton('Screen Shot')
         self.publishBtn = QtGui.QPushButton('Publish')
@@ -34,6 +37,8 @@ class CheckInView(QtGui.QDialog, basisView.BasisView):
         self.mainLO.addWidget(self.diffLabel, 0, 0, 1, 2, self.centerAlign)
         self.mainLO.addWidget(self.cmpView, 1, 0, 1, 2, self.centerAlign)
         self.mainLO.addWidget(self.nextBtn, 2, 1)
+
+        self.picLabel.setFixedSize(300, 225)
 
         self.setWindowTitle('Check in Window')
 
@@ -57,18 +62,28 @@ class CheckInView(QtGui.QDialog, basisView.BasisView):
         self.mainLO.addWidget(self.publishBtn, 2, 1)
 
     def initCmpContent(self, diffInfo):
+        return
         self.cmpView.initCmpContent(diffInfo)
 
     def takeScreenShot(self):
-        return
+        temPic = '/Users/wujiajian/Desktop/edit2piz.png'
+        updateInfo = {'outputTemPic': temPic}
+        self.dataCtrl.setData(updateInfo)
+        
+        self.picmap.load(temPic)
+        self.picLabel.setPixmap(self.picmap)
+        self.picLabel.setScaledContents(1)
 
     def publishFile(self):
-        desc = str(self.descTE.text())
-        temPic = self.getDataVal('outputTemPic')
+        desc = str(self.descTE.toPlainText())
+        temPic = self.dataCtrl.getDataVal('outputTemPic')
         updateInfo = {'outputDescStr': desc,
                       'outputTemPic': temPic}
         self.dataCtrl.setData(updateInfo)
-                      
         self.dataCtrl.checkInFile()
-        return
+        self.emitUpdateContentViewSignal()
+        self.close()
+
+    def emitUpdateContentViewSignal(self):
+        self.updateContViewSignal.emit()
 
