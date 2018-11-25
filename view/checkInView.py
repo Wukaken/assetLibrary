@@ -87,3 +87,16 @@ class CheckInView(QtGui.QDialog, basisView.BasisView):
     def emitUpdateContentViewSignal(self):
         self.updateContViewSignal.emit()
 
+    def closeEvent(self, qevent):
+        self.clearCheckInData()
+
+    def clearCheckInData(self):
+        updateInfo = {'outputTemFile': '',
+                      'outputTemPic': '',
+                      'outputDetailInfo': {},
+                      'outputFileName': ''}
+        self.dataCtrl.setData(updateInfo)
+
+    def reject(self):
+        self.clearCheckInData()
+        super(CheckInView, self).reject()

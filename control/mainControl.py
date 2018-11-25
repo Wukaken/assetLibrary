@@ -120,7 +120,7 @@ class MainControl(basisControl.BasisControl):
         detailInfo = {'face': 'test'}
         # detailInfo = mayaDataIO.genDetailFileInfo(outputFileType)
         updateInfo = {'outputTemFile': outFile,
-                      'detailInfo': detailInfo}
+                      'outputDetailInfo': detailInfo}
         self.setData(updateInfo)
 
         aInfo = {'metaData': {'fileName': 'currentFile'},
@@ -177,7 +177,7 @@ class MainControl(basisControl.BasisControl):
     def outputFile(self, ver, mainOutput):
         temFile = self.getDataVal('outputTemFile')
         temPic = self.getDataVal('outputTemPic')
-        detailInfo = self.getDataVal('detailInfo')
+        detailInfo = self.getDataVal('outputDetailInfo')
         outputFileName = self.getDataVal('outputFileName')
         fileParts = os.path.splitext(outputFileName)
         picParts = os.path.splitext(temPic)
