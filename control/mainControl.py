@@ -4,6 +4,7 @@ import shutil
 import basisControl
 from func.mail import mailUtil
 from func.basis import compareUtil
+from func.basis import detailInfoUtil
 
 
 class MainControl(basisControl.BasisControl):
@@ -180,7 +181,9 @@ class MainControl(basisControl.BasisControl):
         detailInfo = self.getDataVal('outputDetailInfo')
         outputFileName = self.getDataVal('outputFileName')
         fileParts = os.path.splitext(outputFileName)
-        picParts = os.path.splitext(temPic)
+        picParts = []
+        if temPic:
+            picParts = os.path.splitext(temPic)
         
         currentDir = ''
         verStr = ''
@@ -193,7 +196,9 @@ class MainControl(basisControl.BasisControl):
 
         outMainName = '%s%s%s' % (fileParts[0], verStr, fileParts[1])
         outJsonName = '%s%s.json' % (fileParts[0], verStr)
-        outPicName = '%s%s%s' % (fileParts[0], verStr, picParts[1])
+        outPicName = ''
+        if temPic:
+            outPicName = '%s%s%s' % (fileParts[0], verStr, picParts[1])
 
         outputFileType = self.getDataVal('outputFileType')
         outInfo = {
@@ -210,10 +215,35 @@ class MainControl(basisControl.BasisControl):
         
         outJson = os.path.join(currentDir, outJsonName).replace('\\', '/')
         self.dataObj.outputDataToFile(outJson, outInfo)
-        outPic = os.path.join(currentDir, outPicName).replace('\\', '/')
-        shutil.copy(temPic, outPic)
+        if temPic:
+            outPic = os.path.join(currentDir, outPicName).replace('\\', '/')
+            shutil.copy(temPic, outPic)
         outMain = os.path.join(currentDir, outMainName).replace('\\', '/')
         self.outputMainFile(temFile, outMain, outputFileType)
 
     def outputMainFile(self, temFile, outFile, outputFileType):
         shutil.copy(temFile, outFile)
+
+    def takeCurrentAppScreenShot(self):
+        mayaInit = self.getDataVal('mayaInit')
+        outPic = ''
+        if mayaInit:
+            from func.maya import mayaScreenShot
+            outPic = mayaScreenShot.screenShotCurrentPanel()
+
+        return outPic
+
+    def outputCurrentAppFile(self):
+        mayaInit = self.getDataVal('mayaInit')
+        outFile = ''
+        if mayaInit:
+            from func.maya import mayaDataIO
+            outFile = mayaDataIO.saveMayaFile()
+
+        return outFile
+
+    def outputCurrentFileDetailInfo(self):
+        outputFileType = self.getDataVal('outputFileType')
+        detailOutObj = detailInfoUtil.DetailInfoUtil(outputFileType)
+        detailInfo = detailOutObj.do()
+        return detailInfo

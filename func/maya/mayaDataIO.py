@@ -37,7 +37,7 @@ def cleanMayaUI():
                     cmds.deleteUI(win)
 
                     
-def saveMayaFile(mayaFile, cleanUpUI=1):
+def saveMayaFile(mayaFile='', cleanUpUI=1):
     if not mayaFile:
         mayaFile = cmds.file(q=1, sn=1)
     if not mayaFile:

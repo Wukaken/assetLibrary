@@ -66,7 +66,7 @@ class CheckInView(QtGui.QDialog, basisView.BasisView):
         self.cmpView.initCmpContent(diffInfo)
 
     def takeScreenShot(self):
-        temPic = '/Users/wujiajian/Desktop/edit2piz.png'
+        temPic = self.dataCtrl.takeCurrentAppScreenShot()
         updateInfo = {'outputTemPic': temPic}
         self.dataCtrl.setData(updateInfo)
         
@@ -76,7 +76,7 @@ class CheckInView(QtGui.QDialog, basisView.BasisView):
 
     def publishFile(self):
         desc = str(self.descTE.toPlainText())
-        temPic = self.dataCtrl.getDataVal('outputTemPic')
+        temPic = self.dataCtrl.getDataVal('outputTemPic', '')
         updateInfo = {'outputDescStr': desc,
                       'outputTemPic': temPic}
         self.dataCtrl.setData(updateInfo)

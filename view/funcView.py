@@ -117,6 +117,11 @@ class FuncView(basisView.BasisView):
             mess = rec[1]
             self.buildUpCheckInFailView(mess)
         else:
+            outputTemFile = self.dataCtrl.outputCurrentAppFile()
+            outputDetailInfo = self.dataCtrl.outputCurrentFileDetailInfo()
+            updateInfo = {'outputTemFile': outputTemFile,
+                          'outputDetailInfo': outputDetailInfo}
+            self.dataCtrl.setData(updateInfo)
             diffInfo = self.dataCtrl.doCheckInCompare()
             self.buildUpCheckInView(diffInfo)
         
