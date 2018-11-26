@@ -220,7 +220,8 @@ class MainControl(basisControl.BasisControl):
         self.outputMainFile(temFile, outMain, outputFileType)
 
     def outputMainFile(self, temFile, outFile, outputFileType):
-        shutil.copy(temFile, outFile)
+        from func.mayaFunc import mayaDataIO
+        mayaDataIO.publishFile(temFile, outFile)
 
     def takeCurrentAppScreenShot(self):
         mayaInit = self.getDataVal('mayaInit')

@@ -72,3 +72,28 @@ def openFileAs(oriMayaFile):
 
     shutil.copy(oriMayaFile, temFile)
     openMayaFile(temFile)
+
+
+def publishFile(temFile, outFile):
+    outDir = os.path.dirname(outFile)
+    addDir = os.path.join(outDir, 'innerFile')
+    if not os.path.isdir(addDir):
+        os.makedirs(addDir)
+
+    nodeAttrInfo = {'file': 'ftn'}
+    for node, attr in nodeAttrInfo.items():
+        nodes = cmds.ls(type=node)
+        for node in nodes:
+            objAttr = '%s.%s' % (node, attr)
+            val = cmds.getAttr(objAttr)
+            toVal = os.path.join(addDir, os.path.basename(val)).replace('\\', '/')
+            try:
+                shutil.copy(val, toVal)
+            except:
+                pass
+
+            cmds.setAttr(objAttr, toVal, type='string')
+
+    saveMayaFile(temFile)
+    shutil.copy(temFile, outFile)
+

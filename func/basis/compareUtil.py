@@ -22,13 +22,28 @@ class CompareUtil(object):
         allKeys = list(set(aDetailInfo).union(bDetailInfo))
 
         for dataKey in allKeys:
-            aVal = aDetailInfo.get(dataKey, [])
-            bVal = bDetailInfo.get(dataKey, [])
+            aVal = aDetailInfo.get(dataKey)
+            bVal = bDetailInfo.get(dataKey)
             if dataKey in ['meshNameData', 'controlNameData']:
+                if aVal is None:
+                    aVal = []
+                if bVal is None:
+                    bVal = []
+                
                 self.genDiffList(aVal, bVal, dataKey, diffInfo)
             elif dataKey == 'meshTopoData':
+                if aVal is None:
+                    aVal = {}
+                if bVal is None:
+                    bVal = {}
+                    
                 self.getDiffTopoData(aVal, bVal, dataKey, diffInfo)
             elif dataKey == 'shaderConnectData':
+                if aVal is None:
+                    aVal = {}
+                if bVal is None:
+                    bVal = {}
+                    
                 self.getDiffShaderConnectData(aVal, bVal, dataKey, diffInfo)
 
     def genDiffList(self, aList, bList, dataKey, diffInfo):
@@ -72,7 +87,7 @@ class CompareUtil(object):
             diffInfo[self.bFile].pop(dataKey)
 
     def getDiffShaderConnectData(self, aConInfo, bConInfo, dataKey, diffInfo):
-        allKeys = list(set(aConInfo) + set(bConInfo))
+        allKeys = list(set(aConInfo).union(bConInfo))
 
         diffInfo[self.aFile][dataKey] = {'exist only': {},
                                          'different': {}}

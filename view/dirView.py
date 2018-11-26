@@ -85,6 +85,7 @@ class DirView(basisView.BasisView):
                 full = pathInfo[key]
                 if os.path.isdir(full) and \
                    not key == 'innerVersion' and \
+                   not key == 'innerFile' and \
                    not key.startswith('.'):
                     if not full.endswith('/'):
                         full += '/'
