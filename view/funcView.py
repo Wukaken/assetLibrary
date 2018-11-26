@@ -131,6 +131,7 @@ class FuncView(basisView.BasisView):
 
         ciV.updateContViewSignal.connect(self.emitUpdateContentViewSignal)
         ciV.show()
+        ciV.initCmpContent(diffInfo)
 
     def emitUpdateContentViewSignal(self):
         self.updateContViewSignal.emit()

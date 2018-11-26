@@ -51,12 +51,14 @@ class CmpView(basisView.BasisView):
         self.titleLabel.setText('Compare View')
 
     def initCmpContent(self, diffInfo):
-        aInfo = diffInfo['aFileInfo']
-        bInfo = diffInfo['bFileInfo']
+        fileList = diffInfo['fileList']
+        aFile = fileList[0]
+        bFile = fileList[1]
+        aInfo = diffInfo[aFile]
+        bInfo = diffInfo[bFile]
         aStr = self.dataCtrl.getDataOutputStr(aInfo)
         bStr = self.dataCtrl.getDataOutputStr(bInfo)
-        aFile = aInfo['fileName']
-        bFile = bInfo['fileName']
+
         self.aLabel.setText(aFile)
         self.bLabel.setText(bFile)
         self.aTe.clear()

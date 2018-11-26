@@ -48,4 +48,4 @@ def outputMeshTopoInfo():
                          'topoId': topoId}
         it.next()
 
-    return topoId
+    return topoInfo

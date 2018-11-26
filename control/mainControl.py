@@ -120,7 +120,7 @@ class MainControl(basisControl.BasisControl):
         self.setData(updateInfo)
 
         aInfo = {'metaData': {'fileName': 'currentFile'},
-                 'detailInfo': detailInfo}
+                 'detailData': detailInfo}
         validContentFiles = self.getDataVal('validContentFiles', {})
         outputFileName = self.getDataVal('outputFileName', '')
         bInfo = {}
@@ -137,6 +137,8 @@ class MainControl(basisControl.BasisControl):
         cmpUtil = compareUtil.CompareUtil(aInfo, bInfo)
         diffInfo = {}
         cmpUtil.doCompare(diffInfo)
+        print diffInfo
+        print 'diao'
         return diffInfo
 
     def checkInFile(self):

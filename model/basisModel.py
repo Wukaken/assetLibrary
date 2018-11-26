@@ -43,7 +43,7 @@ class BasisModel(object):
         inData.update(curData)
 
     def outputDataToStr(self, outData):
-        outStr = json.dump(outData, sort_keys=1, indent=2)
+        outStr = json.dumps(outData, sort_keys=1, indent=2)
         return outStr
 
     def outputDataToFile(self, outJson, outData):

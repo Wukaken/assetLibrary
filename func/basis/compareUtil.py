@@ -3,27 +3,27 @@ class CompareUtil(object):
         self.aInfo = aInfo
         self.bInfo = bInfo
 
-    def doCompare(self):
-        diffInfo = {}
+    def doCompare(self, diffInfo={}):
         self.aFile = self.getFileName(self.aInfo)
         self.bFile = self.getFileName(self.bInfo)
         diffInfo[self.aFile] = {}
         diffInfo[self.bFile] = {}
+        diffInfo['fileList'] = [self.aFile, self.bFile]
         self.genDiffDetailData(diffInfo)
 
     def getFileName(self, info):
-        metaData = info['metaData']
-        fileName = metaData['fileName']
+        metaData = info.get('metaData', {})
+        fileName = metaData.get('fileName', '')
         return fileName
 
     def genDiffDetailData(self, diffInfo={}):
-        aDetailInfo = self.aInfo['detailData']
-        bDetailInfo = self.bInfo['detailData']
-        allKeys = list(set(aDetailInfo + set(bDetailInfo)))
+        aDetailInfo = self.aInfo.get('detailData', {})
+        bDetailInfo = self.bInfo.get('detailData', {})
+        allKeys = list(set(aDetailInfo).union(bDetailInfo))
 
         for dataKey in allKeys:
-            aVal = aDetailInfo.get(dataKey)
-            bVal = bDetailInfo.get(dataKey)
+            aVal = aDetailInfo.get(dataKey, [])
+            bVal = bDetailInfo.get(dataKey, [])
             if dataKey in ['meshNameData', 'controlNameData']:
                 self.genDiffList(aVal, bVal, dataKey, diffInfo)
             elif dataKey == 'meshTopoData':
@@ -40,7 +40,7 @@ class CompareUtil(object):
             diffInfo[self.bFile][dataKey] = {'Exist Only': bRes}
 
     def getDiffTopoData(self, aTopoInfo, bTopoInfo, dataKey, diffInfo):
-        allKeys = list(set(aTopoInfo) + set(bTopoInfo))
+        allKeys = list(set(aTopoInfo).union(bTopoInfo))
 
         diffInfo[self.aFile][dataKey] = {'difference': {}}
         diffInfo[self.bFile][dataKey] = {'difference': {}}
@@ -83,8 +83,8 @@ class CompareUtil(object):
         aDiffTest = 0
         bDiffTest = 0
         for key in allKeys:
-            aConData = aConInfo[key]
-            bConData = bConInfo[key]
+            aConData = aConInfo.get(key, {})
+            bConData = bConInfo.get(key, {})
             if aConData and not bConData:
                 diffInfo[self.aFile][dataKey]['exist only'][key] = aConData
                 aExistTest = 1

@@ -58,7 +58,7 @@ class CheckInView(QtGui.QDialog, basisView.BasisView):
         self.mainLO.addWidget(self.publishBtn, 2, 1)
 
     def initCmpContent(self, diffInfo):
-        return
+        print diffInfo
         self.cmpView.initCmpContent(diffInfo)
 
     def takeScreenShot(self):
