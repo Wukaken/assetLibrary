@@ -1,6 +1,8 @@
 import os
 import re
 import shutil
+import datetime
+import getpass
 import basisControl
 from func.mail import mailUtil
 from func.basis import compareUtil
@@ -137,8 +139,6 @@ class MainControl(basisControl.BasisControl):
         cmpUtil = compareUtil.CompareUtil(aInfo, bInfo)
         diffInfo = {}
         cmpUtil.doCompare(diffInfo)
-        print diffInfo
-        print 'diao'
         return diffInfo
 
     def checkInFile(self):
@@ -147,6 +147,7 @@ class MainControl(basisControl.BasisControl):
         self.outputFile(ver, 1)
         self.outputFile(ver, 0)
         self.getDetailVersionInfo()
+        self.triggerCheckInMail(ver)
 
     def resetDetailFileInfo(self):
         outputFileType = self.getDataVal('outputFileType')
@@ -246,3 +247,17 @@ class MainControl(basisControl.BasisControl):
         detailOutObj = detailInfoUtil.DetailInfoUtil(info)
         detailInfo = detailOutObj.do()
         return detailInfo
+
+    def triggerCheckInMail(self, ver):
+        outputFileType = self.getDataVal('outputFileType')
+        outputFileName = self.getDataVal('outputFileName')
+        currentDir = self.getDataVal('currentDir')
+
+        outFile = os.path.join(currentDir, outputFileName).replace('\\', '/')
+        outMess = 'File: %s, type: %s, version: %s has been check in by user: %s in %s' % (outFile, outputFileType, ver, getpass.getuser(), datetime.datetime.now().strftime('%Y%m%d_%H%M'))
+        subject = 'Asset: %s Checkin Success' % outputFileName
+
+        mailInfo = {'mess': outMess,
+                    'subject': subject}
+        # self.triggerMail(mailInfo)
+

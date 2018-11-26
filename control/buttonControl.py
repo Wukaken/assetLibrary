@@ -2,6 +2,7 @@ import re
 import getpass
 import os
 import shutil
+import datetime
 import basisControl
 from func.basis import compareUtil
 
@@ -71,7 +72,7 @@ class ButtonControl(basisControl.BasisControl):
             shutil.copy(mainFile, toMainFile)
             shutil.copy(picFile, toPicFile)
 
-            outMess = 'File: %s has been checked out with %s by %s' % (toMainFile, mainFile, getpass.getuser())
+            outMess = 'File: %s has been checked out with %s by %s in %s' % (toMainFile, mainFile, getpass.getuser(), datetime.datetime.now().strftime('%Y%m%d_%H%M'))
             subject = 'Asset: %s Checkout Success' % mainFileName
 
         self.widget.emitCheckOutSignal(

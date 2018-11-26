@@ -31,9 +31,9 @@ class CheckInView(QtGui.QDialog, basisView.BasisView):
         super(CheckInView, self).buildWidget()
 
         self.mainLO.addWidget(self.diffLabel, 0, 0, 1, 2, self.centerAlign)
-        self.mainLO.addWidget(self.cmpView, 1, 0, 1, 2, self.centerAlign)
+        self.mainLO.addWidget(self.cmpView, 1, 0, 1, 2)
         self.mainLO.addWidget(self.nextBtn, 2, 1)
-
+        
         self.picLabel.setFixedSize(300, 225)
 
         self.setWindowTitle('Check in Window')
@@ -58,7 +58,6 @@ class CheckInView(QtGui.QDialog, basisView.BasisView):
         self.mainLO.addWidget(self.publishBtn, 2, 1)
 
     def initCmpContent(self, diffInfo):
-        print diffInfo
         self.cmpView.initCmpContent(diffInfo)
 
     def takeScreenShot(self):
