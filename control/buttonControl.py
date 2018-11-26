@@ -16,7 +16,7 @@ class ButtonControl(basisControl.BasisControl):
     def initFuncInfo(self):
         self.funcInfo = {
             'checkOutFile': self.checkOutFile,
-            'openFileAs': self.openFileAs,
+            'openMayaFileAs': self.openMayaFileAs,
             'compareDiffVersion': self.compareWithVersions,
             'compareDiffMain': self.compareWithMainFile,
             'compareDiffCurrentScene': self.compareWithCurrentScene
@@ -79,7 +79,7 @@ class ButtonControl(basisControl.BasisControl):
         self.widget.emitCheckOutSignal(
             outMess, subject, checkOutTest)
 
-    def openFileAs(self):
+    def openMayaFileAs(self):
         from func.maya import mayaDataIO
 
         currentDir = self.getDataVal('currentDir')

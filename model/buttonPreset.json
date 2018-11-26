@@ -24,9 +24,9 @@
 			"conditions": ["mayaInit"],
 			"validFileTypes": []
 		},
-		"openFileAs": {
+		"openMayaFileAs": {
 			"desc": "Copy the selected file to your workspace and open it",
-			"func": "openFileAs",
+			"func": "openMayaFileAs",
 			"conditions": ["mayaInit"],
 			"validFileTypes": []
 		}

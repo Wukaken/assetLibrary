@@ -1,3 +1,5 @@
+import os
+import shutil
 from maya import cmds
 from maya import mel
 import tempfile
@@ -50,3 +52,23 @@ def saveMayaFile(mayaFile='', cleanUpUI=1):
         
     cmds.file(f=1, save=1, options="v=0", type=fileType, uc=0)
     return mayaFile
+
+
+def openFileAs(oriMayaFile):
+    curWorkspaces = cmds.workspace(q=1, lfw=1)
+    curWorkspace = curWorkspaces[0]
+    outDir = os.path.join(curWorkspace, 'scene').replace('\\', '/')
+    if not os.path.isdir(outDir):
+        os.makedirs(outDir)
+        
+    name = os.path.basename(oriMayaFile)
+    temFile = os.path.join(curWorkspace, name).replace('\\', '/')
+    parts = os.path.splitext(name)
+    i = 0
+    while os.path.isfile(temFile):
+        curName = '%s_%s%s' % (parts[0], i, parts[1])
+        temFile = os.path.join(curWorkspace, curName).replace('\\', '/')
+        i += 1
+
+    shutil.copy(oriMayaFile, temFile)
+    openMayaFile(temFile)
