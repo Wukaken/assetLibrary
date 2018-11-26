@@ -5,6 +5,7 @@ import shutil
 import datetime
 import basisControl
 from func.basis import compareUtil
+from func.basis import detailInfoUtil
 
 
 class ButtonControl(basisControl.BasisControl):
@@ -93,14 +94,21 @@ class ButtonControl(basisControl.BasisControl):
         self.widget.emitCompareDiffMainFileSignal()
 
     def compareWithCurrentScene(self):
-        from func.maya import mayaDataUtil
-        
         bJson = self.getDataVal('inputJson')
         bInfo = {}
-        self.dataObj.inputDataFromFile(bJson, bJson)
-        detailInfo = mayaDataUtil.genFileDetailInfo()
+        self.dataObj.inputDataFromFile(bJson, bInfo)
 
-        cmpUtil = compareUtil.CompareUtil(detailInfo, bInfo)
+        bMetaData = bInfo['metaData']
+        fileType = bMetaData['fileType']
+
+        info = {'outputFileType': fileType,
+                'mayaInit': self.getDataVal('mayaInit')}
+        detailOutObj = detailInfoUtil.DetailInfoUtil(info)
+        detailInfo = detailOutObj.do()
+        aInfo = {'metaData': {'fileName': 'currentFile'},
+                 'detailData': detailInfo}
+
+        cmpUtil = compareUtil.CompareUtil(aInfo, bInfo)
         diffInfo = {}
         cmpUtil.doCompare(diffInfo)
         self.widget.emitCompareDiffCurrentFileSignal(diffInfo)

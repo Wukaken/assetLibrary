@@ -42,10 +42,10 @@ def outputMeshTopoInfo():
                     for verId in verIds:
                         topoMess += ' %s ' % verId
 
-        topoId = hashlib.md5(topoMess).hexdigest()
-        topoInfo[dag] = {'verNum': verNum,
-                         'faceNum': faceNum,
-                         'topoId': topoId}
+            topoId = hashlib.md5(topoMess).hexdigest()
+            topoInfo[dag] = {'verNum': verNum,
+                             'faceNum': faceNum,
+                             'topoId': topoId}
         it.next()
 
     return topoInfo

@@ -109,6 +109,7 @@ class ContentView(basisView.BasisView):
         btnV.checkOutFileSignal.connect(self.checkOutAction)
         btnV.compareDiffVersionsSignal.connect(self.compareDiffVersionsAction)
         btnV.compareMainFileSignal.connect(self.compareDiffMainFileAction)
+        btnV.compareCurrentFileSignal.connect(self.compareDiffCurrentFileAction)
         return btnV
 
     def buildUpContItemView(self, info, item, listWid):
@@ -264,11 +265,17 @@ class ContentView(basisView.BasisView):
             files.sort(reverse=1)
 
             inputJson = self.dataCtrl.getDataVal('detailInputJson')
-            bId = versionSelIds[1]
+            bId = versionSelIds[0]
+            if len(versionSelIds) == 2:
+                bId = versionSelIds[1]
+                
             aFile = inputJson
             bFile = files[bId]
             diffInfo = self.dataCtrl.compareDiffFiles(aFile, bFile)
             self.emitCmpViewUpdateInfo(diffInfo)
+
+    def compareDiffCurrentFileAction(self, diffInfo):
+        self.emitCmpViewUpdateInfo(diffInfo)
 
     def emitCmpViewUpdateInfo(self, diffInfo):
         self.updateCmpViewSignal.emit(diffInfo)
