@@ -259,5 +259,7 @@ class MainControl(basisControl.BasisControl):
 
         mailInfo = {'mess': outMess,
                     'subject': subject}
+        updateInfo = {'checkInOutputInfo': mailInfo}
+        self.setData(updateInfo)
         # self.triggerMail(mailInfo)
 

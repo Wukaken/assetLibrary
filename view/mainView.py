@@ -68,7 +68,7 @@ class MainView(QtGui.QDialog, basisView.BasisView):
         self.rootWid.updateDirViewSignal.connect(self.dirWid.initContent)
         self.dirWid.updateContViewSignal.connect(self.contentWid.initContent)
         self.typeWid.updateContViewSignal.connect(self.contentWid.initContent)
-        self.contentWid.updateCmpViewSignal.connect(self.cmpWid.initContent)
+        self.contentWid.updateCmpViewSignal.connect(self.cmpWid.initCmpContent)
         self.funcWid.updateContViewSignal.connect(self.contentWid.refreshContentWidget)
 
     def closeEvent(self, qevent):

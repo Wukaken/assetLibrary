@@ -76,11 +76,18 @@ class CheckInView(QtGui.QDialog, basisView.BasisView):
                       'outputTemPic': temPic}
         self.dataCtrl.setData(updateInfo)
         self.dataCtrl.checkInFile()
+        self.buildUpNotificationView()
         self.emitUpdateContentViewSignal()
         self.close()
 
     def emitUpdateContentViewSignal(self):
         self.updateContViewSignal.emit()
+        
+    def buildUpNotificationView(self):
+        checkInOutputInfo = self.dataCtrl.getDataVal('checkInOutputInfo')
+        subject = checkInOutputInfo['subject']
+        mess = checkInOutputInfo['mess']
+        QtGui.QMessageBox.warning(self, subject, mess)
 
     def closeEvent(self, qevent):
         self.clearCheckInData()
@@ -89,7 +96,8 @@ class CheckInView(QtGui.QDialog, basisView.BasisView):
         updateInfo = {'outputTemFile': '',
                       'outputTemPic': '',
                       'outputDetailInfo': {},
-                      'outputFileName': ''}
+                      'outputFileName': '',
+                      'checkInOutputInfo': {}}
         self.dataCtrl.setData(updateInfo)
 
     def reject(self):
