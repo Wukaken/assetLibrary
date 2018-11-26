@@ -84,8 +84,11 @@ class ButtonView(basisView.BasisView):
     def setupFuncMenu(self):
         funcInfo = self.dataCtrl.getDataVal('funcInfo')
         allDesc = ''
-        for funcKey, info in funcInfo.items():
-            conditions = info['conditions']
+        funcKeys = funcInfo.keys()
+        funcKeys.sort()
+        for funcKey in funcKeys:
+            info = funcInfo[funcKey]
+            conditions = info.get('conditions', [])
             appTest = 1
             for condition in conditions:
                 if not self.dataCtrl.getDataVal(condition):

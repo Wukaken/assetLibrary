@@ -80,11 +80,13 @@ class ButtonControl(basisControl.BasisControl):
             outMess, subject, checkOutTest)
 
     def openMayaFileAs(self):
-        from func.maya import mayaDataIO
+        from func.mayaFunc import mayaDataIO
 
         currentDir = self.getDataVal('currentDir')
-        fileName = self.getDataVal('fileName')
+        metaData = self.getDataVal('metaData')
+        fileName = metaData['fileName']
         oriMa = os.path.join(currentDir, fileName).replace('\\', '/')
+
         mayaDataIO.openFileAs(oriMa)
 
     def compareWithVersions(self):

@@ -100,6 +100,8 @@ class ContentView(basisView.BasisView):
             buildItemFunc(info, item, listWid)
 
     def buildUpButtonView(self, info):
+        outInfo = {}
+        outInfo.update(info)
         btnV = buttonView.ButtonView()
         btnM = buttonModel.ButtonModel('', info)
         btnC = buttonControl.ButtonControl()

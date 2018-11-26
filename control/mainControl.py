@@ -226,7 +226,7 @@ class MainControl(basisControl.BasisControl):
         mayaInit = self.getDataVal('mayaInit')
         outPic = ''
         if mayaInit:
-            from func.maya import mayaScreenShot
+            from func.mayaFunc import mayaScreenShot
             outPic = mayaScreenShot.screenShotCurrentPanel()
 
         return outPic
@@ -235,7 +235,7 @@ class MainControl(basisControl.BasisControl):
         mayaInit = self.getDataVal('mayaInit')
         outFile = ''
         if mayaInit:
-            from func.maya import mayaDataIO
+            from func.mayaFunc import mayaDataIO
             outFile = mayaDataIO.saveMayaFile()
 
         return outFile

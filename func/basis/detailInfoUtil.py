@@ -58,21 +58,21 @@ class DetailInfoUtil(basisModel.BasisModel):
         return funcNames
 
     def outputMeshNameInfo(self):
-        from func.maya import meshUtils
+        from func.mayaFunc import meshUtils
         meshes = meshUtils.outputMeshNames()
         return meshes
 
     def outputMeshTopoInfo(self):
-        from func.maya import meshUtils
+        from func.mayaFunc import meshUtils
         topoInfo = meshUtils.outputMeshTopoInfo()
         return topoInfo
 
     def outputShaderConInfo(self):
-        from func.maya import shaderUtils
+        from func.mayaFunc import shaderUtils
         shaderConInfo = shaderUtils.outputShaderConInfo()
         return shaderConInfo
 
     def outputCtrlNameInfo(self):
-        from func.maya import rigUtils
+        from func.mayaFunc import rigUtils
         ctrlNames = rigUtils.outputCtrlNames()
         return ctrlNames
